@@ -70,8 +70,10 @@ class PathTest {
     @DisplayName("이동 수단에 따른 시작 장소와 끝 장소의 유효성을 검사한다")
     void validateStartToEnd() {
         // Given
-        final Place start = new Place("루터회관", new Point(127.0, 37.0));
-        final Place end = new Place("선릉역", new Point(127.1, 37.1));
+        final String startPlaceName = "루터회관";
+        final Place start = new Place(startPlaceName, new Point(127.0, 37.0));
+        final String endPlaceName = "선릉역";
+        final Place end = new Place(endPlaceName, new Point(127.1, 37.1));
         final TravelMethod subway = TravelMethod.SUBWAY;
         final TravelMethod transfer = TravelMethod.TRANSFER;
         final int travelTime = 10;
@@ -81,11 +83,11 @@ class PathTest {
         assertSoftly(softAssertions -> {
             softAssertions.assertThatThrownBy(() -> new Path(start, start, subway, travelTime, subwayLineName))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("시작 장소와 끝 장소는 같을 수 없습니다.");
+                    .hasMessage("시작 장소(%s)와 끝 장소(%s)는 같을 수 없습니다.", startPlaceName, startPlaceName);
 
             softAssertions.assertThatThrownBy(() -> new Path(start, end, transfer, travelTime, null))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("환승 통로 이동에서의 시작과 끝 장소는 다를 수 없습니다..");
+                    .hasMessage("환승 통로 이동에서의 시작 장소(%s)와 끝 장소(%s)는 다를 수 없습니다.", startPlaceName, endPlaceName);
         });
     }
 

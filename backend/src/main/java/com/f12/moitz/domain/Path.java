@@ -56,10 +56,20 @@ public class Path {
 
     private void validateStartToEnd(final Place start, final Place end,  final TravelMethod travelMethod) {
         if (!travelMethod.isTransfer() && start.equals(end)) {
-            throw new IllegalArgumentException("시작 장소와 끝 장소는 같을 수 없습니다.");
+            throw new IllegalArgumentException(
+                    String.format(
+                            "시작 장소(%s)와 끝 장소(%s)는 같을 수 없습니다.",
+                            start.getName(), end.getName()
+                    )
+            );
         }
         if (travelMethod.isTransfer() && !start.equals(end)) {
-            throw new IllegalArgumentException("환승 통로 이동에서의 시작과 끝 장소는 다를 수 없습니다..");
+            throw new IllegalArgumentException(
+                    String.format(
+                            "환승 통로 이동에서의 시작 장소(%s)와 끝 장소(%s)는 다를 수 없습니다.",
+                            start.getName(), end.getName()
+                    )
+            );
         }
     }
 

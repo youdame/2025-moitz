@@ -33,7 +33,7 @@ public class SubwayRouteFinderAsyncAdapter implements AsyncRouteFinder {
 
     @Override
     public List<Route> findRoutes(final List<StartEndPair> placePairs) {
-        final List<Route> routes = Flux.fromIterable(placePairs)
+        return Flux.fromIterable(placePairs)
                 .flatMapSequential(pair -> {
                             final String startPlaceName = pair.start().getName();
                             final String endPlaceName = pair.end().getName();
@@ -46,8 +46,6 @@ public class SubwayRouteFinderAsyncAdapter implements AsyncRouteFinder {
                 .map(Route::new)
                 .collectList()
                 .block();
-
-        return routes;
     }
 
     private Mono<List<Path>> convertPath(final List<SubwayPath> subwayPaths) {
