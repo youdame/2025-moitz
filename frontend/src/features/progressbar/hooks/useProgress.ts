@@ -18,10 +18,10 @@ type UseProgressReturns = {
 export const useProgress = ({
   duration = 10000,
   initialProgress = PROGRESS_MIN_VALUE,
-  targetProgress = PROGRESS_MAX_VALUE
+  targetProgress = PROGRESS_MAX_VALUE,
 }: UseProgressParams = {}): UseProgressReturns => {
   const [progress, setProgress] = useState(initialProgress);
-  const animationRef = useRef<number>(null);
+  const animationRef = useRef<number | null>(null);
 
   const startTimeRef = useRef<number>(0);
 
@@ -46,7 +46,8 @@ export const useProgress = ({
         }
 
         const ratio = elapsed / duration;
-        const easedProgress = startProgress + (to - startProgress) * (1 - Math.pow(1 - ratio, 3));
+        const easedProgress =
+          startProgress + (to - startProgress) * (1 - Math.pow(1 - ratio, 3));
         const easedProgressNumber = Math.floor(easedProgress * 1000) / 1000;
         return easedProgressNumber;
       });
@@ -66,12 +67,22 @@ export const useProgress = ({
       throw new Error('duration must be greater than 0');
     }
 
-    if (initialProgress < PROGRESS_MIN_VALUE || initialProgress > PROGRESS_MAX_VALUE) {
-      throw new Error(`Initial progress must be between ${PROGRESS_MIN_VALUE} and ${PROGRESS_MAX_VALUE}`);
+    if (
+      initialProgress < PROGRESS_MIN_VALUE ||
+      initialProgress > PROGRESS_MAX_VALUE
+    ) {
+      throw new Error(
+        `Initial progress must be between ${PROGRESS_MIN_VALUE} and ${PROGRESS_MAX_VALUE}`,
+      );
     }
 
-    if (targetProgress < PROGRESS_MIN_VALUE || targetProgress > PROGRESS_MAX_VALUE) {
-      throw new Error(`Target progress must be between ${PROGRESS_MIN_VALUE} and ${PROGRESS_MAX_VALUE}`);
+    if (
+      targetProgress < PROGRESS_MIN_VALUE ||
+      targetProgress > PROGRESS_MAX_VALUE
+    ) {
+      throw new Error(
+        `Target progress must be between ${PROGRESS_MIN_VALUE} and ${PROGRESS_MAX_VALUE}`,
+      );
     }
 
     if (progress !== PROGRESS_MAX_VALUE) {
@@ -108,6 +119,6 @@ export const useProgress = ({
 
   return {
     progress,
-    complete
+    complete,
   };
 };
