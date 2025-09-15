@@ -31,6 +31,11 @@ function MeetingForm() {
 
   const { getRecommendationId } = useLocationsContext();
 
+  const isValid = React.useMemo(
+    () => validateFormSubmit().isValid,
+    [departureList, conditionID],
+  );
+
   const showValidationError = (error: ValidationError) => {
     if (!error.isValid) {
       showToast(error.message);
@@ -43,11 +48,6 @@ function MeetingForm() {
       showValidationError(validationResult);
       return;
     }
-  };
-
-  const validateActive = () => {
-    const formValidation = validateFormSubmit();
-    return formValidation.isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,7 +88,7 @@ function MeetingForm() {
         />
       </div>
 
-      <MeetingFormBottomButton active={validateActive()} />
+      <MeetingFormBottomButton active={isValid} />
       <Toast message={message} isVisible={isVisible} />
     </form>
   );
