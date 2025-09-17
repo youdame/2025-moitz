@@ -13,6 +13,8 @@ import com.f12.moitz.application.dto.StartingPlaceResponse;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,10 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/locations")
 public class LocationController implements SwaggerLocationController {
 
+    private final Logger log = LoggerFactory.getLogger(LocationController.class);
+
     private final RecommendationService recommendationService;
 
     @PostMapping
     public ResponseEntity<RecommendationsResponse> recommendLocations(@RequestBody RecommendationRequest request) {
+        log.info("USER Input : StartingPlaces = {}, Requirement = {}",request.startingPlaceNames(),request.requirement() );
         return ResponseEntity.status(201).body(recommendationService.tempRecommendLocation(request));
     }
 

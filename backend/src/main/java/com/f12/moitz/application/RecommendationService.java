@@ -13,9 +13,9 @@ import com.f12.moitz.domain.Place;
 import com.f12.moitz.domain.RecommendCondition;
 import com.f12.moitz.domain.Recommendation;
 import com.f12.moitz.domain.RecommendedPlace;
+import com.f12.moitz.domain.Result;
 import com.f12.moitz.domain.Route;
 import com.f12.moitz.domain.Routes;
-import com.f12.moitz.domain.Result;
 import com.f12.moitz.domain.repository.RecommendResultRepository;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +79,7 @@ public class RecommendationService {
                 request.startingPlaceNames(),
                 requirement
         );
+        log.info("[AI 추천 지역] : {}", recommendedLocationsResponse.toString());
         final Map<Place, ReasonAndDescription> generatedPlacesWithReason = recommendedLocationsResponse.recommendations()
                 .stream()
                 .collect(Collectors.toMap(
@@ -88,6 +89,7 @@ public class RecommendationService {
                                 recommendation.description()
                         )
                 ));
+
         stopWatch.stop();
 
         stopWatch.start("모든 경로 찾기");
