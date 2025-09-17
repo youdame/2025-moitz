@@ -6,7 +6,7 @@ import { LocationRequirement } from '@entities/location/types/LocationRequiremen
 import StartingSpotName from '@shared/components/startingSpotName/StartingSpotName';
 import { flex, typography } from '@shared/styles/default.styled';
 
-import * as startSpotWrapper from './startingSpotWrapper.styled';
+import * as meetingWrapper from './meetingWrapper.styled';
 
 interface StaringSpotWrapperProps {
   startingPlaces: StartingPlace[];
@@ -18,18 +18,16 @@ const getCustomConditionIdText = (id: LocationRequirement) => {
   return entry.ID === 'NOT_SELECTED' ? entry.TEXT : `${entry.TEXT} 장소`;
 };
 
-function StartingSpotWrapper({
+function MeetingWrapper({
   startingPlaces,
   conditionID,
 }: StaringSpotWrapperProps) {
   const conditionIdText = getCustomConditionIdText(conditionID);
 
   return (
-    <div
-      css={[startSpotWrapper.base(), flex({ direction: 'column', gap: 10 })]}
-    >
+    <div css={[meetingWrapper.base(), flex({ direction: 'column', gap: 10 })]}>
       <div css={[flex({ align: 'center', gap: 10 })]}>
-        <span css={[typography.sh1, startSpotWrapper.title()]}>출발지</span>
+        <span css={[typography.sh1, meetingWrapper.title()]}>출발지</span>
         <div css={[flex({ wrap: 'wrap', gap: 5 })]}>
           {startingPlaces.map((place, index) => {
             const isLast = startingPlaces.length - 1 === index;
@@ -44,8 +42,8 @@ function StartingSpotWrapper({
         </div>
       </div>
       <div css={[flex({ align: 'center', gap: 10 })]}>
-        <span css={[typography.sh1, startSpotWrapper.title()]}>조건</span>
-        <span css={[typography.b2, startSpotWrapper.content()]}>
+        <span css={[typography.sh1, meetingWrapper.title()]}>조건</span>
+        <span css={[typography.b2, meetingWrapper.content()]}>
           {conditionIdText}
         </span>
       </div>
@@ -53,4 +51,4 @@ function StartingSpotWrapper({
   );
 }
 
-export default StartingSpotWrapper;
+export default MeetingWrapper;

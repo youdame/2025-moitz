@@ -4,7 +4,7 @@ import {
   StartingPlace,
 } from '@entities/location/types/Location';
 
-import StartingSpotWrapper from '@shared/components/startingSpotWrapper/StartingSpotWrapper';
+import MeetingWrapper from '@shared/components/meetingWrapper/MeetingWrapper';
 
 import SpotItemList from '../spotItemList/SpotItemList';
 
@@ -24,7 +24,7 @@ function BottomSheetList({
 
   return (
     <>
-      <StartingSpotWrapper
+      <MeetingWrapper
         startingPlaces={startingPlaces}
         conditionID={conditionID}
       />

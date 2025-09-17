@@ -4,7 +4,7 @@ import { StartingPlacesMock } from '@mocks/LocationsMock';
 
 import { withContainer } from '@sb/decorators/withContainer';
 
-import StartingSpotWrapper from './StartingSpotWrapper';
+import MeetingWrapper from './MeetingWrapper';
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
@@ -12,7 +12,7 @@ const conditionIdList = Object.values(CONDITION_CARD_TEXT).map(
   (condition) => condition.ID,
 );
 const meta = {
-  component: StartingSpotWrapper,
+  component: MeetingWrapper,
   decorators: [withContainer],
   parameters: {
     layout: 'centered',
@@ -29,7 +29,7 @@ const meta = {
       description: '출발지 조건',
     },
   },
-} satisfies Meta<typeof StartingSpotWrapper>;
+} satisfies Meta<typeof MeetingWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
