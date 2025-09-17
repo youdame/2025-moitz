@@ -37,9 +37,12 @@ export function useFormInfo(): UseFormInfoReturn {
       return stationNameValidation;
     }
 
+    const matchedStation = stationNameValidation.matchedStation!;
+    if (!matchedStation) return;
+
     const duplicateValidation = validateDuplicateDeparture(
       departureList,
-      stationNameValidation.matchedStation!,
+      matchedStation,
     );
 
     if (!duplicateValidation.isValid) {
@@ -54,8 +57,6 @@ export function useFormInfo(): UseFormInfoReturn {
       return lengthValidation;
     }
 
-    const matchedStation = stationNameValidation.matchedStation!;
-    if (!matchedStation) return;
     setDepartureList((prev) => [...prev, matchedStation]);
     return { isValid: true, message: '' };
   };
