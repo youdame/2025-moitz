@@ -1,5 +1,0 @@
-spring.data.mongodb.port=27017
-spring.data.mongodb.database=moitz
-spring.data.mongodb.username=user
-spring.data.mongodb.password=moitz
-spring.data.mongodb.authentication-database=admin
