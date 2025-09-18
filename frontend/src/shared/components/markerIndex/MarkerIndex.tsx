@@ -53,7 +53,9 @@ function MarkerIndex({
           <img src={IconUser} alt="icon-marker-user" draggable={false} />
         )}
       </div>
-      {label && <p css={[marker.label_base(), label_type()]}>{label}</p>}
+      {label && (
+        <p css={[typography.sh3, marker.label_base(), label_type()]}>{label}</p>
+      )}
     </div>
   );
 }
