@@ -19,6 +19,7 @@ import com.f12.moitz.domain.Point;
 import com.f12.moitz.domain.RecommendedPlace;
 import com.f12.moitz.domain.Route;
 import com.f12.moitz.domain.TravelMethod;
+import com.f12.moitz.domain.subway.SubwayLine;
 import com.f12.moitz.domain.Path;
 import com.f12.moitz.domain.Result;
 import com.f12.moitz.domain.repository.RecommendResultRepository;
@@ -98,10 +99,10 @@ class RecommendationServiceTest {
         given(placeRecommender.recommendPlaces(anyList(), any(String.class))).willReturn(mockRecommendedPlaces);
 
         List<Route> mockRoutes = List.of(
-                new Route(List.of(new Path(gangnam, seolleung, TravelMethod.SUBWAY, 10, "2호선"))),
-                new Route(List.of(new Path(yeoksam, seolleung, TravelMethod.SUBWAY, 5, "2호선"))),
-                new Route(List.of(new Path(gangnam, samsung, TravelMethod.SUBWAY, 999, "2호선"))),
-                new Route(List.of(new Path(yeoksam, samsung, TravelMethod.SUBWAY, 10, "2호선")))
+                new Route(List.of(new Path(gangnam, seolleung, TravelMethod.SUBWAY, 10, SubwayLine.fromTitle("2호선")))),
+                new Route(List.of(new Path(yeoksam, seolleung, TravelMethod.SUBWAY, 5, SubwayLine.fromTitle("2호선")))),
+                new Route(List.of(new Path(gangnam, samsung, TravelMethod.SUBWAY, 999, SubwayLine.fromTitle("2호선")))),
+                new Route(List.of(new Path(yeoksam, samsung, TravelMethod.SUBWAY, 10, SubwayLine.fromTitle("2호선"))))
         );
         given(routeFinder.findRoutes(anyList())).willReturn(mockRoutes);
 

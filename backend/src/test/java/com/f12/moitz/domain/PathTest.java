@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import java.time.Duration;
+import com.f12.moitz.domain.subway.SubwayLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ class PathTest {
         final String subwayLineName = "2호선";
 
         // When & Then
-        assertThatNoException().isThrownBy(() -> new Path(start, end, travelMethod, travelTime, subwayLineName));
+        assertThatNoException().isThrownBy(() -> new Path(start, end, travelMethod, travelTime, SubwayLine.fromTitle(subwayLineName)));
     }
 
     @Test
@@ -36,15 +36,15 @@ class PathTest {
 
         // When & Then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThatThrownBy(() -> new Path(null, end, travelMethod, travelTime, subwayLineName))
+            softAssertions.assertThatThrownBy(() -> new Path(null, end, travelMethod, travelTime, SubwayLine.fromTitle(subwayLineName)))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("시작 장소와 끝 장소는 필수입니다.");
 
-            softAssertions.assertThatThrownBy(() -> new Path(start, null, travelMethod, travelTime, subwayLineName))
+            softAssertions.assertThatThrownBy(() -> new Path(start, null, travelMethod, travelTime, SubwayLine.fromTitle(subwayLineName)))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("시작 장소와 끝 장소는 필수입니다.");
 
-            softAssertions.assertThatThrownBy(() -> new Path(start, end, null, travelTime, subwayLineName))
+            softAssertions.assertThatThrownBy(() -> new Path(start, end, null, travelTime, SubwayLine.fromTitle(subwayLineName)))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("이동 수단은 필수입니다.");
         });
@@ -61,7 +61,7 @@ class PathTest {
         final String subwayLineName = "2호선";
 
         // When & Then
-        assertThatThrownBy(() -> new Path(start, end, travelMethod, travelTime, subwayLineName))
+        assertThatThrownBy(() -> new Path(start, end, travelMethod, travelTime, SubwayLine.fromTitle(subwayLineName)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이동 시간은 null이거나 음수일 수 없습니다.");
     }
@@ -81,7 +81,7 @@ class PathTest {
 
         // When & Then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThatThrownBy(() -> new Path(start, start, subway, travelTime, subwayLineName))
+            softAssertions.assertThatThrownBy(() -> new Path(start, start, subway, travelTime, SubwayLine.fromTitle(subwayLineName)))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("시작 장소(%s)와 끝 장소(%s)는 같을 수 없습니다.", startPlaceName, startPlaceName);
 
@@ -93,7 +93,7 @@ class PathTest {
 
     @Test
     @DisplayName("이동 수단에 따른 지하철 노선명의 유효성을 검사한다")
-    void validateSubwayLineName() {
+    void validateSubwayLine() {
         // Given
         final Place start = new Place("루터회관", new Point(127.0, 37.0));
         final Place end = new Place("선릉역", new Point(127.1, 37.1));
@@ -104,13 +104,13 @@ class PathTest {
 
         // When & Then
         assertSoftly(softAssertions -> {
-            softAssertions.assertThatThrownBy(() -> new Path(start, end, bus, travelTime, subwayLineName))
+            softAssertions.assertThatThrownBy(() -> new Path(start, end, bus, travelTime, SubwayLine.fromTitle(subwayLineName)))
                     .isInstanceOf(IllegalStateException.class)
                     .hasMessage("지하철이 아니라면 호선 정보를 지닐 수 없습니다.");
 
             softAssertions.assertThatThrownBy(() -> new Path(start, end, subway, travelTime, null))
                     .isInstanceOf(IllegalStateException.class)
-                    .hasMessage("지하철인 경우 지하철 노선명이 필수입니다.");
+                    .hasMessage("지하철인 경우 지하철 호선 정보가 필수입니다.");
         });
     }
 }

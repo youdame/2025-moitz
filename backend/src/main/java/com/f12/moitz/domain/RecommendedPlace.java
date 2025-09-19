@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class RecommendedPlace {
 
+    // TODO: Place로 변경할 수도 있음
     private final String placeName;
     private final String category;
     private final int walkingTime;

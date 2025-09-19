@@ -23,6 +23,7 @@ public class Result {
     private Instant createdAt;
 
     private List<Place> startingPlaces;
+
     private Recommendation recommendedLocations;
 
     public Result(

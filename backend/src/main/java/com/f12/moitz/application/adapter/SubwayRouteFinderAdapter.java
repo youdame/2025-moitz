@@ -1,12 +1,13 @@
 package com.f12.moitz.application.adapter;
 
-import com.f12.moitz.application.PlaceService;
+import com.f12.moitz.application.SubwayStationService;
 import com.f12.moitz.application.port.RouteFinder;
 import com.f12.moitz.application.port.dto.StartEndPair;
 import com.f12.moitz.domain.Path;
 import com.f12.moitz.domain.Route;
-import com.f12.moitz.domain.subway.SubwayMapPathFinder;
+import com.f12.moitz.domain.subway.service.SubwayMapPathFinder;
 import com.f12.moitz.domain.subway.SubwayPath;
+import com.f12.moitz.domain.subway.SubwayStation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +19,16 @@ import org.springframework.stereotype.Component;
 public class SubwayRouteFinderAdapter implements RouteFinder {
 
     private final SubwayMapPathFinder subwayMapPathFinder;
-    private final PlaceService placeService;
+    private final SubwayStationService subwayStationService;
 
     @Override
     public List<Route> findRoutes(final List<StartEndPair> placePairs) {
         return placePairs.stream()
                 .map(pair -> {
-                    final String startPlaceName = pair.start().getName();
-                    final String endPlaceName = pair.end().getName();
+                    final SubwayStation startStation = subwayStationService.findByName(pair.start().getName());
+                    final SubwayStation endStation = subwayStationService.findByName(pair.end().getName());
                     return new Route(
-                            convertPath(subwayMapPathFinder.findShortestTimePath(startPlaceName, endPlaceName))
+                            convertPath(subwayMapPathFinder.findShortestTimePath(startStation, endStation))
                     );
                 })
                 .toList();
@@ -35,12 +36,13 @@ public class SubwayRouteFinderAdapter implements RouteFinder {
 
     private List<Path> convertPath(final List<SubwayPath> subwayPaths) {
         return subwayPaths.stream()
+                // TODO: SubwayPath, Path 두 객체의 필드가 동일한데, 둘을 통합할 수 있을지 고민하기
                 .map(subwayPath -> new Path(
-                        placeService.findByName(subwayPath.fromName()),
-                        placeService.findByName(subwayPath.toName()),
+                        subwayPath.from().getPlace(),
+                        subwayPath.to().getPlace(),
                         subwayPath.travelMethod(),
                         subwayPath.totalTime(),
-                        subwayPath.lineName()
+                        subwayPath.line()
                 ))
                 .toList();
     }

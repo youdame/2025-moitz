@@ -2,13 +2,15 @@ package com.f12.moitz.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Point {
 
-    private final double x;
-    private final double y;
+    private double x;
+    private double y;
 
     public Point(double x, double y) {
         validate(x, y);
