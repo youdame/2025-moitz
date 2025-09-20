@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 class CandidateTest {
 
+    private static final Point DEFAULT_POINT = new Point(127.2, 37.21);
+
     @Test
     @DisplayName("예외가 발생하지 않고 후보가 생성된다")
     void doesNotThrow() {
@@ -28,7 +30,7 @@ class CandidateTest {
         final Route route = new Route(paths);
         final Routes routes = new Routes(List.of(route));
 
-        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", "카페", 5, "url");
+        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", DEFAULT_POINT, "카페", 5, "url");
         final List<RecommendedPlace> recommendedPlaces = List.of(recommendedPlace);
 
         // When & Then
@@ -51,7 +53,7 @@ class CandidateTest {
         final Route route = new Route(paths);
         final Routes routes = new Routes(List.of(route));
 
-        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", "카페", 5, "url");
+        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", DEFAULT_POINT, "카페", 5, "url");
         final List<RecommendedPlace> recommendedPlaces = List.of(recommendedPlace);
 
         // When & Then
@@ -90,7 +92,7 @@ class CandidateTest {
         final Route route = new Route(paths);
         final Routes routes = new Routes(List.of(route));
 
-        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", "카페", 5, "url");
+        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", DEFAULT_POINT, "카페", 5, "url");
         final List<RecommendedPlace> recommendedPlaces = List.of(recommendedPlace);
         final Candidate candidate = new Candidate(endPlace, routes, recommendedPlaces, "123", "123");
 

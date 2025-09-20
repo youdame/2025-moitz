@@ -1,6 +1,6 @@
 package com.f12.moitz.infrastructure;
 
-import com.f12.moitz.application.PlaceService;
+import com.f12.moitz.application.SubwayStationService;
 import com.f12.moitz.domain.repository.SubwayStationRepository;
 import com.f12.moitz.infrastructure.adapter.SubwayMapLoaderAdapter;
 import com.f12.moitz.infrastructure.client.open.OpenApiClient;
@@ -20,7 +20,7 @@ class SubwayMapLoaderAdapterTest {
     @Autowired
     private SubwayStationRepository subwayStationRepository;
     @Autowired
-    private PlaceService placeService;
+    private SubwayStationService subwayStationService;
 
     @DisplayName("지하철 노선도와 지하철역 Place를 업데이트한다")
     @Test
@@ -34,7 +34,7 @@ class SubwayMapLoaderAdapterTest {
         // When
         // Map<String, SubwayStation> subwayMap = subwayMapLoaderAdapter.loadSubwayMap();
 
-        // placeService.saveIfAbsent(new ArrayList<>(subwayMap.keySet()));
+        // subwayStationService.saveIfAbsent(new ArrayList<>(subwayMap.keySet()));
 
         // Then
         // assertThat(subwayMap).isNotEmpty();

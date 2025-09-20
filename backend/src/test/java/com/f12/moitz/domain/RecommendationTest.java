@@ -87,7 +87,7 @@ class RecommendationTest {
         final Route route = new Route(paths);
         final Routes routes = new Routes(List.of(route));
 
-        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", "카페", 5, "url");
+        final RecommendedPlace recommendedPlace = new RecommendedPlace("스타벅스", new Point(127.2, 37.21), "카페", 5, "url");
         final List<RecommendedPlace> recommendedPlaces = List.of(recommendedPlace);
         return new Candidate(endPlace, routes, recommendedPlaces, "123", "123");
     }
