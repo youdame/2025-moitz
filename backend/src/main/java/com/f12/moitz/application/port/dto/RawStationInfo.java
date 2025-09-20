@@ -4,4 +4,5 @@ public record RawStationInfo(
         String stationName,
         String lineName
 ) {
+
 }

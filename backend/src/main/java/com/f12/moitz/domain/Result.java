@@ -22,12 +22,12 @@ public class Result {
     @Indexed(expireAfter = "7d")
     private Instant createdAt;
 
-    private List<Place> startingPlaces;
+    private List<? extends Place> startingPlaces;
 
     private Recommendation recommendedLocations;
 
     public Result(
-            final List<Place> startingPlaces,
+            final List<? extends Place> startingPlaces,
             final Recommendation recommendedLocations
     ) {
         validate(startingPlaces, recommendedLocations);
@@ -37,7 +37,7 @@ public class Result {
 
     public Result(
             final ObjectId id,
-            final List<Place> startingPlaces,
+            final List<? extends Place> startingPlaces,
             final Recommendation recommendedLocations
     ) {
         validate(startingPlaces, recommendedLocations);
@@ -46,7 +46,7 @@ public class Result {
         this.recommendedLocations = recommendedLocations;
     }
 
-    private void validate(final List<Place> startingPlaces, final Recommendation recommendedLocations) {
+    private void validate(final List<? extends Place> startingPlaces, final Recommendation recommendedLocations) {
         if (startingPlaces == null || startingPlaces.isEmpty()) {
             throw new IllegalArgumentException("출발지들은 비어있거나 null일 수 없습니다.");
         }

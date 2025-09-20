@@ -5,9 +5,11 @@ import com.f12.moitz.application.port.RouteFinder;
 import com.f12.moitz.application.port.dto.StartEndPair;
 import com.f12.moitz.domain.Path;
 import com.f12.moitz.domain.Route;
-import com.f12.moitz.domain.subway.service.SubwayMapPathFinder;
+import com.f12.moitz.domain.repository.SubwayEdgeRepository;
+import com.f12.moitz.domain.subway.SubwayEdges;
 import com.f12.moitz.domain.subway.SubwayPath;
 import com.f12.moitz.domain.subway.SubwayStation;
+import java.util.HashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +20,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SubwayRouteFinderAdapter implements RouteFinder {
 
-    private final SubwayMapPathFinder subwayMapPathFinder;
     private final SubwayStationService subwayStationService;
+    private final SubwayEdgeRepository subwayEdgeRepository;
 
     @Override
     public List<Route> findRoutes(final List<StartEndPair> placePairs) {
+        final SubwayEdges subwayEdges = new SubwayEdges(new HashSet<>(subwayEdgeRepository.findAll()));
         return placePairs.stream()
                 .map(pair -> {
                     final SubwayStation startStation = subwayStationService.findByName(pair.start().getName());
                     final SubwayStation endStation = subwayStationService.findByName(pair.end().getName());
                     return new Route(
-                            convertPath(subwayMapPathFinder.findShortestTimePath(startStation, endStation))
+                            convertPath(subwayEdges.findShortestTimePath(startStation, endStation))
                     );
                 })
                 .toList();
@@ -38,8 +41,8 @@ public class SubwayRouteFinderAdapter implements RouteFinder {
         return subwayPaths.stream()
                 // TODO: SubwayPath, Path 두 객체의 필드가 동일한데, 둘을 통합할 수 있을지 고민하기
                 .map(subwayPath -> new Path(
-                        subwayPath.from().getPlace(),
-                        subwayPath.to().getPlace(),
+                        subwayPath.from(),
+                        subwayPath.to(),
                         subwayPath.travelMethod(),
                         subwayPath.totalTime(),
                         subwayPath.line()

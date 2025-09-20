@@ -5,10 +5,12 @@ import com.f12.moitz.application.port.AsyncRouteFinder;
 import com.f12.moitz.application.port.dto.StartEndPair;
 import com.f12.moitz.domain.Path;
 import com.f12.moitz.domain.Route;
-import com.f12.moitz.domain.subway.service.SubwayMapPathFinder;
+import com.f12.moitz.domain.repository.SubwayEdgeRepository;
+import com.f12.moitz.domain.subway.SubwayEdges;
 import com.f12.moitz.domain.subway.SubwayPath;
 import com.f12.moitz.domain.subway.SubwayStation;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SubwayRouteFinderAsyncAdapter implements AsyncRouteFinder {
 
-    private final SubwayMapPathFinder subwayMapPathFinder;
     private final SubwayStationService subwayStationService;
+    private final SubwayEdgeRepository subwayEdgeRepository;
 
     @Async("asyncTaskExecutor")
     @Override
@@ -34,13 +36,15 @@ public class SubwayRouteFinderAsyncAdapter implements AsyncRouteFinder {
 
     @Override
     public List<Route> findRoutes(final List<StartEndPair> placePairs) {
+        final SubwayEdges subwayEdges = new SubwayEdges(new HashSet<>(subwayEdgeRepository.findAll()));
+
         return Flux.fromIterable(placePairs)
                 .flatMapSequential(pair -> {
                             final SubwayStation startStation = subwayStationService.findByName(pair.start().getName());
                             final SubwayStation endStation = subwayStationService.findByName(pair.end().getName());
                             return Mono.delay(Duration.ofMillis(50))
                                     .then(convertPath(
-                                            subwayMapPathFinder.findShortestTimePath(startStation, endStation)
+                                            subwayEdges.findShortestTimePath(startStation, endStation)
                                     ));
                         },
                         5)
@@ -52,8 +56,8 @@ public class SubwayRouteFinderAsyncAdapter implements AsyncRouteFinder {
     private Mono<List<Path>> convertPath(final List<SubwayPath> subwayPaths) {
         return Mono.just(subwayPaths.stream()
                 .map(subwayPath -> new Path(
-                        subwayPath.from().getPlace(),
-                        subwayPath.to().getPlace(),
+                        subwayPath.from(),
+                        subwayPath.to(),
                         subwayPath.travelMethod(),
                         subwayPath.totalTime(),
                         subwayPath.line()

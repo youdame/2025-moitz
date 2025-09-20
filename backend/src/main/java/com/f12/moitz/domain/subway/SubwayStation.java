@@ -1,46 +1,25 @@
 package com.f12.moitz.domain.subway;
 
 import com.f12.moitz.domain.Place;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import com.f12.moitz.domain.Point;
 import lombok.Getter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
-public class SubwayStation {
+@Document(collection = "subway-stations")
+public class SubwayStation extends Place {
 
-    private final Place place;
-    private final List<Edge> edges = new ArrayList<>();
-
-    public SubwayStation(final Place place) {
-        this.place = place;
-    }
-
-    public String getName() {
-        return this.place.getName();
-    }
-
-    public void addEdge(final Edge newEdge) {
-        final Optional<Edge> existingEdge = edges.stream()
-                .filter(edge -> edge.isEqualTo(newEdge))
-                .findFirst();
-
-        if (existingEdge.isEmpty()) {
-            edges.add(newEdge);
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SubwayStation that = (SubwayStation) o;
-        return Objects.equals(place.getName(), that.place.getName());
+    public SubwayStation(final String name, final Point point) {
+        super(name, point);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(place.getName());
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        return super.equals(o);
     }
 }
