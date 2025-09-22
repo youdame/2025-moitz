@@ -19,6 +19,13 @@ public class SubwayStationService {
         return subwayStationRepository.findAll();
     }
 
+    public List<String> findAllStationNames() {
+        return subwayStationRepository.findAll()
+                .stream()
+                .map(SubwayStation::getName)
+                .toList();
+    }
+
     public SubwayStation findByName(final String name) {
         return subwayStationRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchElementException("이름이 일치하는 지하철역이 존재하지 않습니다. 역 이름: " + name));
@@ -37,4 +44,5 @@ public class SubwayStationService {
     public void saveAll(final List<SubwayStation> subwayStations) {
         subwayStationRepository.saveAll(subwayStations);
     }
+
 }
