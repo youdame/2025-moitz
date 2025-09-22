@@ -63,6 +63,7 @@ public class RecommendationService {
 
     public String recommendLocation(final RecommendationRequest request) {
         StopWatch stopWatch = new StopWatch("추천 서비스 전체");
+        log.debug("추천 서비스 시작");
 
         stopWatch.start("지역 추천");
         final RecommendCondition recommendCondition = RecommendCondition.fromTitle(request.requirement());
@@ -108,7 +109,7 @@ public class RecommendationService {
                 placeRoutes
         );
         stopWatch.stop();
-        System.out.println(stopWatch.prettyPrint());
+        log.debug("추천 서비스 완료. {}", stopWatch.shortSummary());
 
         return recommendResultRepository.saveAndReturnId(
                 recommendationMapper.toResult(
