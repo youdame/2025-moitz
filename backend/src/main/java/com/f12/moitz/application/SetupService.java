@@ -57,7 +57,7 @@ public class SetupService {
                 .distinct()
                 .toList();
 
-        List<SubwayStation> subwayStations = placeFinder.findPlacesByNames(stationNames)
+        final List<SubwayStation> subwayStations = placeFinder.findPlacesByNames(stationNames)
                 .stream()
                 .map(place -> new SubwayStation(place.getName(), place.getPoint()))
                 .toList();
@@ -72,7 +72,7 @@ public class SetupService {
     }
 
     private SubwayEdges assembleSubwayStations(final List<SubwayStation> stations, final List<RawRouteInfo> rawRoutes) {
-        Map<SubwayStation, List<Edge>> stationMap = new HashMap<>();
+        final Map<SubwayStation, List<Edge>> stationMap = new HashMap<>();
         for (RawRouteInfo rawRoute : rawRoutes) {
             final List<RawPathInfo> paths = rawRoute.paths();
             for (int i = 0; i < paths.size(); i++) {
