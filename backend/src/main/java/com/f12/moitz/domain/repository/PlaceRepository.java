@@ -1,7 +1,10 @@
 package com.f12.moitz.domain.repository;
 
 import com.f12.moitz.domain.Place;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PlaceRepository extends MongoRepository<Place, String> {
@@ -10,4 +13,5 @@ public interface PlaceRepository extends MongoRepository<Place, String> {
 
     Optional<Place> findByName(final String name);
 
+    List<Place> findByPointNear(Point point, Distance distance);
 }

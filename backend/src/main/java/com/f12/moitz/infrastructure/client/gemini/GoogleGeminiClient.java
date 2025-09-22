@@ -8,6 +8,7 @@ import com.f12.moitz.application.dto.RecommendedLocationsResponse;
 import com.f12.moitz.common.error.exception.ExternalApiErrorCode;
 import com.f12.moitz.common.error.exception.ExternalApiException;
 import com.f12.moitz.common.error.exception.RetryableApiException;
+import com.f12.moitz.domain.Place;
 import com.f12.moitz.infrastructure.PromptGenerator;
 import com.f12.moitz.infrastructure.client.gemini.dto.RecommendedPlaceResponses;
 import com.f12.moitz.infrastructure.client.gemini.utils.JsonParser;
@@ -53,6 +54,7 @@ public class GoogleGeminiClient {
             final String requirement,
             final Map<String, Object> inputData
     ) {
+
         final String stations = String.join(", ", stationNames);
         final String prompt = String.format(ADDITIONAL_PROMPT, RECOMMENDATION_COUNT, stations, requirement, RECOMMENDATION_COUNT);
 

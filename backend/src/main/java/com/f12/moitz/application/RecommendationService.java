@@ -75,6 +75,8 @@ public class RecommendationService {
         final String requirement = RecommendCondition.fromTitle(request.requirement()).getKeyword();
         final List<Place> startingPlaces = placeService.findByNames(request.startingPlaceNames());
 
+        final List<Place> candidatePlace = placeService.generateCandidatePlace(startingPlaces);
+
         final RecommendedLocationsResponse recommendedLocationsResponse = locationRecommender.recommendLocations(
                 request.startingPlaceNames(),
                 requirement
@@ -170,5 +172,4 @@ public class RecommendationService {
                 .orElseThrow(() -> new IllegalArgumentException("아이디에 해당하는 결과를 찾을 수 없습니다."));
         return recommendationMapper.toResponse(result);
     }
-
 }

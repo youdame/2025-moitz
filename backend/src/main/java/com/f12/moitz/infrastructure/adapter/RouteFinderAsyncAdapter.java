@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -66,7 +67,7 @@ public class RouteFinderAsyncAdapter implements AsyncRouteFinder {
         final List<Path> resultingPaths = new ArrayList<>();
         // 환승이 존재할 경우 마지막 유효한 역 이름과 좌표로 대치하도록
         String lastValidStationName = null;
-        Point lastValidPoint = null;
+        GeoJsonPoint lastValidPoint = null;
 
         for (SubPathResponse subPath : subPaths) {
             if (subPath.startName() == null || subPath.endName() == null) {
@@ -86,11 +87,11 @@ public class RouteFinderAsyncAdapter implements AsyncRouteFinder {
             else {
                 final Place startPlace = new Place(
                         subPath.startName(),
-                        new Point(subPath.startX(), subPath.startY())
+                        new GeoJsonPoint(subPath.startX(), subPath.startY())
                 );
                 final Place endPlace = new Place(
                         subPath.endName(),
-                        new Point(subPath.endX(), subPath.endY())
+                        new GeoJsonPoint(subPath.endX(), subPath.endY())
                 );
                 resultingPaths.add(new Path(
                         startPlace,
@@ -101,7 +102,7 @@ public class RouteFinderAsyncAdapter implements AsyncRouteFinder {
                 ));
 
                 lastValidStationName = subPath.endName();
-                lastValidPoint = new Point(subPath.endX(), subPath.endY());
+                lastValidPoint = new GeoJsonPoint(subPath.endX(), subPath.endY());
             }
         }
 

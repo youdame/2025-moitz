@@ -41,6 +41,7 @@ public class LocationRecommenderAdapter implements LocationRecommender {
         );
     }
 
+
     @Recover
     public RecommendedLocationsResponse recoverRecommendedLocations(
             final List<String> startPlaceNames,

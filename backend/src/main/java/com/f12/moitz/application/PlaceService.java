@@ -6,6 +6,12 @@ import com.f12.moitz.domain.repository.PlaceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Point;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -38,4 +44,33 @@ public class PlaceService {
         return places.size();
     }
 
+    public List<Place> generateCandidatePlace(List<Place> startingPlaces) {
+        log.info("진입");
+        GeometryFactory factory = new GeometryFactory();
+
+        Coordinate[] coordinateArr = startingPlaces.stream()
+                .map(place -> {
+                    List<Double> coordinates = place.getPoint().getCoordinates();
+                    return new Coordinate(coordinates.get(0), coordinates.get(1));
+                })
+                .toArray(Coordinate[]::new);
+
+        MultiPoint multiPoint = factory.createMultiPointFromCoords(coordinateArr);
+
+        Point centroid = multiPoint.getCentroid();
+
+        log.info("centroid 생성");
+        log.info("centroid : {}", centroid.getX() + " "  + centroid.getY());
+
+        org.springframework.data.geo.Point center =
+                new org.springframework.data.geo.Point(centroid.getX(), centroid.getY());
+
+        Distance distance = new Distance(5, Metrics.KILOMETERS);
+
+        List<Place> placeWithRadius = placeRepository.findByPointNear(center, distance);
+        for (Place withRadius : placeWithRadius) {
+            System.out.println(withRadius.getName());
+        }
+        return placeWithRadius;
+    }
 }

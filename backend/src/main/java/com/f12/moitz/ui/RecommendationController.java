@@ -1,9 +1,14 @@
 package com.f12.moitz.ui;
 
+import com.f12.moitz.application.PlaceService;
 import com.f12.moitz.application.RecommendationService;
-import com.f12.moitz.application.dto.*;
-
+import com.f12.moitz.application.dto.RecommendationCreateResponse;
+import com.f12.moitz.application.dto.RecommendationRequest;
+import com.f12.moitz.application.dto.RecommendationsResponse;
+import com.f12.moitz.domain.Place;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +26,19 @@ public class RecommendationController implements SwaggerRecommendationController
 
     @PostMapping
     public ResponseEntity<RecommendationCreateResponse> recommendLocations(@RequestBody RecommendationRequest request) {
-        return ResponseEntity.status(201).body(new RecommendationCreateResponse(recommendationService.recommendLocation(request)));
+        return ResponseEntity.status(201)
+                .body(new RecommendationCreateResponse(recommendationService.recommendLocation(request)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RecommendationsResponse> getRecommendationResult(@PathVariable("id") String id){
+    public ResponseEntity<RecommendationsResponse> getRecommendationResult(@PathVariable("id") String id) {
         RecommendationsResponse response = recommendationService.findResultById(id);
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/a")
+    public ResponseEntity<RecommendationCreateResponse> testRecommendLocations(@RequestBody RecommendationRequest request) {
+        return ResponseEntity.status(201)
+                .body(new RecommendationCreateResponse(recommendationService.recommendLocation(request)));
+    }
 }

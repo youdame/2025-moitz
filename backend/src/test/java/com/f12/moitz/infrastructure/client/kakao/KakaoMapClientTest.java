@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 
@@ -62,7 +63,7 @@ class KakaoMapClientTest {
         );
 
         // When
-        Point actualPoint = kakaoMapClient.searchPointBy("강남역");
+        GeoJsonPoint actualPoint = kakaoMapClient.searchPointBy("강남역");
 
         // Then
         assertThat(actualPoint.getX()).isEqualTo(127.027618);

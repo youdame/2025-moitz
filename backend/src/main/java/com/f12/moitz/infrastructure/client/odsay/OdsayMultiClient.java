@@ -8,6 +8,7 @@ import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -25,7 +26,7 @@ public class OdsayMultiClient {
     @Value("${odsay.api.key}")
     private String odsayApiKey;
 
-    public Mono<SubwayRouteSearchResponse> getRoute(final Point startPoint, final Point endPoint) {
+    public Mono<SubwayRouteSearchResponse> getRoute(final GeoJsonPoint startPoint, final GeoJsonPoint endPoint) {
         return Mono.delay(Duration.ofMillis(300))
                 .then(
                         odsayWebClient.get()
