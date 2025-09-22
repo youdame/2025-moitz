@@ -17,6 +17,7 @@ import com.f12.moitz.domain.Result;
 import com.f12.moitz.domain.Route;
 import com.f12.moitz.domain.Routes;
 import com.f12.moitz.domain.repository.RecommendResultRepository;
+import com.f12.moitz.domain.subway.SubwayStation;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,7 +34,7 @@ import org.springframework.util.StopWatch;
 @Service
 public class RecommendationService {
 
-    private final PlaceService placeService;
+    private final SubwayStationService subwayStationService;
     private final PlaceRecommender placeRecommender;
     private final LocationRecommender locationRecommender;
     private final RouteFinder routeFinder;
@@ -42,14 +43,14 @@ public class RecommendationService {
     private final RecommendResultRepository recommendResultRepository;
 
     public RecommendationService(
-            @Autowired final PlaceService placeService,
+            @Autowired final SubwayStationService subwayStationService,
             @Qualifier("placeRecommenderAdapter") final PlaceRecommender placeRecommender,
             @Autowired final LocationRecommender locationRecommender,
             @Qualifier("subwayRouteFinderAdapter") final RouteFinder routeFinder,
             @Autowired final RecommendationMapper recommendationMapper,
             @Autowired RecommendResultRepository recommendResultRepository
     ) {
-        this.placeService = placeService;
+        this.subwayStationService = subwayStationService;
         this.placeRecommender = placeRecommender;
         this.locationRecommender = locationRecommender;
         this.routeFinder = routeFinder;
@@ -57,23 +58,12 @@ public class RecommendationService {
         this.recommendResultRepository = recommendResultRepository;
     }
 
-    /*
-        * /locations 유지를 위해 임시로 사용되는 추천 서비스 메소드입니다.
-     */
-    public com.f12.moitz.application.dto.temp.RecommendationsResponse tempRecommendLocation(final RecommendationRequest request) {
-        final RecommendationsResponse result = findResultById(recommendLocation(request));
-        return new com.f12.moitz.application.dto.temp.RecommendationsResponse(
-                result.startingPlaces(),
-                result.locations()
-        );
-    }
-
     public String recommendLocation(final RecommendationRequest request) {
         StopWatch stopWatch = new StopWatch("추천 서비스 전체");
 
         stopWatch.start("지역 추천");
         final String requirement = RecommendCondition.fromTitle(request.requirement()).getKeyword();
-        final List<Place> startingPlaces = placeService.findByNames(request.startingPlaceNames());
+        final List<SubwayStation> startingPlaces = subwayStationService.findByNames(request.startingPlaceNames());
 
         final List<Place> candidatePlace = placeService.generateCandidatePlace(startingPlaces);
 
@@ -85,7 +75,7 @@ public class RecommendationService {
         final Map<Place, ReasonAndDescription> generatedPlacesWithReason = recommendedLocationsResponse.recommendations()
                 .stream()
                 .collect(Collectors.toMap(
-                        recommendation -> placeService.findByName(recommendation.locationName()),
+                        recommendation -> subwayStationService.findByName(recommendation.locationName()),
                         recommendation -> new ReasonAndDescription(
                                 recommendation.reason(),
                                 recommendation.description()
@@ -129,7 +119,7 @@ public class RecommendationService {
     }
 
     public Map<Place, Routes> findRoutesForAllAsync(
-            final List<Place> startingPlaces,
+            final List<? extends Place> startingPlaces,
             final List<Place> generatedPlaces
     ) {
         final List<StartEndPair> allPairs = generatedPlaces.stream()
