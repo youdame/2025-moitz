@@ -58,7 +58,7 @@ public class RecommendationMapper {
     }
 
     public Result toResult(
-            final List<Place> startingPlaces,
+            final List<? extends Place> startingPlaces,
             final Recommendation recommendation
     ) {
         return new Result(
@@ -113,7 +113,9 @@ public class RecommendationMapper {
                     RecommendedPlace p = places.get(i);
                     return new PlaceRecommendResponse(
                             i + 1,
-                            p.getPlaceName(),
+                            p.getX(),
+                            p.getY(),
+                            p.getName(),
                             p.getCategory(),
                             p.getWalkingTime(),
                             p.getUrl()
@@ -151,7 +153,7 @@ public class RecommendationMapper {
                 path.getEnd().getName(),
                 path.getEnd().getPoint().getX(),
                 path.getEnd().getPoint().getY(),
-                path.getSubwayLineName(),
+                path.getSubwayLine() != null ? path.getSubwayLine().getTitle() : null,
                 (int) path.getTravelTime().toMinutes()
         );
     }
