@@ -12,8 +12,8 @@ public class BadRequestException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public BadRequestException(ErrorCode errorCode, String message) {
-        super(message);
+    public BadRequestException(ErrorCode errorCode, Object... args) {
+        super(String.format(errorCode.getMessage(), args));
         this.errorCode = errorCode;
     }
 
