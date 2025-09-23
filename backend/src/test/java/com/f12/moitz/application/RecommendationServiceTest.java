@@ -125,4 +125,5 @@ class RecommendationServiceTest {
                 .collect(Collectors.toList()))
                 .containsExactlyInAnyOrder("선릉역", "삼성역");
     }
+
 }
