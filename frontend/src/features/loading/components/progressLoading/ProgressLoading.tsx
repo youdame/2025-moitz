@@ -8,17 +8,20 @@ import { useProgress } from '@features/progressbar/hooks/useProgress';
 import ProgressText from '../progressText/ProgressText';
 
 interface ProgressLoadingProps {
-  isComplete: boolean;
+  isReadyToComplete: boolean;
 }
 
-function ProgressLoading({ isComplete }: ProgressLoadingProps) {
-  const { progress, complete } = useProgress({ initialProgress: 0, targetProgress: 90 });
+function ProgressLoading({ isReadyToComplete }: ProgressLoadingProps) {
+  const { progress, complete } = useProgress({
+    initialProgress: 0,
+    targetProgress: 90,
+  });
 
   useEffect(() => {
-    if (isComplete && progress < 100) {
+    if (isReadyToComplete && progress < 100) {
       complete();
     }
-  }, [isComplete]);
+  }, [isReadyToComplete]);
 
   return (
     <BaseLoading>

@@ -27,7 +27,9 @@ function IndexPage() {
   if (isProgressLoading) {
     return (
       <ProgressLoading
-        isComplete={isProgressLoading && data?.recommendedLocations?.length > 0}
+        isReadyToComplete={
+          isProgressLoading && data?.recommendedLocations?.length > 0
+        }
       />
     );
   }
