@@ -44,8 +44,8 @@ public class SubwayRouteFinderAsyncAdapter implements AsyncRouteFinder {
     public List<Route> findRoutes(final List<StartEndPair> placePairs) {
         return Flux.fromIterable(placePairs)
                 .flatMapSequential(pair -> {
-                            final SubwayStation startStation = subwayStationService.findByName(pair.start().getName());
-                            final SubwayStation endStation = subwayStationService.findByName(pair.end().getName());
+                            final SubwayStation startStation = subwayStationService.getByName(pair.start().getName());
+                            final SubwayStation endStation = subwayStationService.getByName(pair.end().getName());
                             return Mono.delay(Duration.ofMillis(50))
                                     .then(convertPath(
                                             subwayEdges.findShortestTimePath(startStation, endStation)

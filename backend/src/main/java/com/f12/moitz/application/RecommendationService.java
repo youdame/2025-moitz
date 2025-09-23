@@ -9,6 +9,7 @@ import com.f12.moitz.application.port.RouteFinder;
 import com.f12.moitz.application.port.dto.ReasonAndDescription;
 import com.f12.moitz.application.port.dto.StartEndPair;
 import com.f12.moitz.application.utils.RecommendationMapper;
+import com.f12.moitz.common.error.exception.BadRequestException;
 import com.f12.moitz.common.error.exception.GeneralErrorCode;
 import com.f12.moitz.common.error.exception.NotFoundException;
 import com.f12.moitz.domain.Place;
@@ -66,7 +67,7 @@ public class RecommendationService {
         stopWatch.start("지역 추천");
         final RecommendCondition recommendCondition = RecommendCondition.fromTitle(request.requirement());
         final String requirement = recommendCondition.getKeyword();
-        final List<SubwayStation> startingPlaces = subwayStationService.findByNames(request.startingPlaceNames());
+        final List<SubwayStation> startingPlaces = getByNames(request.startingPlaceNames());
 
         final RecommendedLocationsResponse recommendedLocationsResponse = locationRecommender.recommendLocations(
                 request.startingPlaceNames(),
@@ -75,7 +76,7 @@ public class RecommendationService {
         final Map<Place, ReasonAndDescription> generatedPlacesWithReason = recommendedLocationsResponse.recommendations()
                 .stream()
                 .collect(Collectors.toMap(
-                        recommendation -> subwayStationService.findByName(recommendation.locationName()),
+                        recommendation -> subwayStationService.getByName(recommendation.locationName()),
                         recommendation -> new ReasonAndDescription(
                                 recommendation.reason(),
                                 recommendation.description()
@@ -118,7 +119,14 @@ public class RecommendationService {
         ).toHexString().toUpperCase();
     }
 
-    public Map<Place, Routes> findRoutesForAllAsync(
+    private List<SubwayStation> getByNames(final List<String> names) {
+        return names.stream()
+                .map(name -> subwayStationService.findByName(name)
+                        .orElseThrow(() -> new BadRequestException(GeneralErrorCode.INPUT_INVALID_START_LOCATION)))
+                .toList();
+    }
+
+    private Map<Place, Routes> findRoutesForAllAsync(
             final List<? extends Place> startingPlaces,
             final List<Place> generatedPlaces
     ) {
