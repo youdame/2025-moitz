@@ -22,7 +22,7 @@ public class SubwayStationService {
 
     public SubwayStation getByName(final String name) {
         return subwayStationRepository.findByName(name)
-                .orElseThrow(() -> new NoSuchElementException("이름이 일치하는 지하철역이 존재하지 않습니다. 역 이름: " + name));
+                .orElseThrow(() -> new NoSuchElementException("이름이 일치하는 지하철역이 존재하지 않습니다."));
     }
 
     public Optional<SubwayStation> findByName(final String name) {
