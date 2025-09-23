@@ -26,7 +26,7 @@ public class OdsayMultiClient {
     @Value("${odsay.api.key}")
     private String odsayApiKey;
 
-    public Mono<SubwayRouteSearchResponse> getRoute(final GeoJsonPoint startPoint, final GeoJsonPoint endPoint) {
+    public Mono<SubwayRouteSearchResponse> getRoute(final Point startPoint, final Point endPoint) {
         return Mono.delay(Duration.ofMillis(300))
                 .then(
                         odsayWebClient.get()

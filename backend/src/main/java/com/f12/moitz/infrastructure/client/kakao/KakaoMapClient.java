@@ -35,10 +35,10 @@ public class KakaoMapClient {
     @Value("${kakao.api.key}")
     private String kakaoApiKey;
 
-    public GeoJsonPoint searchPointBy(final String placeName) {
+    public Point searchPointBy(final String placeName) {
         final String url = String.format(SEARCH_POINT_URL, placeName);
         final KakaoApiResponse response = getData(url);
-        return new GeoJsonPoint(response.findStationX(), response.findStationY());
+        return new Point(response.findStationX(), response.findStationY());
     }
 
     public KakaoApiResponse searchPlacesBy(final SearchPlacesRequest request) {

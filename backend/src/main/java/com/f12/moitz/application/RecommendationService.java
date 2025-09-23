@@ -65,8 +65,8 @@ public class RecommendationService {
         final String requirement = RecommendCondition.fromTitle(request.requirement()).getKeyword();
         final List<SubwayStation> startingPlaces = subwayStationService.findByNames(request.startingPlaceNames());
 
-        final List<Place> candidatePlace = placeService.generateCandidatePlace(startingPlaces);
-
+        final List<SubwayStation> candidatePlace = subwayStationService.generateCandidatePlace(startingPlaces);
+        log.info(candidatePlace.toString());
         final RecommendedLocationsResponse recommendedLocationsResponse = locationRecommender.recommendLocations(
                 request.startingPlaceNames(),
                 requirement

@@ -4,11 +4,11 @@ import com.f12.moitz.application.port.RouteFinder;
 import com.f12.moitz.application.port.dto.StartEndPair;
 import com.f12.moitz.domain.Path;
 import com.f12.moitz.domain.Place;
+import com.f12.moitz.domain.Point;
 import com.f12.moitz.domain.Route;
 import com.f12.moitz.domain.TravelMethod;
 import com.f12.moitz.domain.subway.SubwayLine;
 import com.f12.moitz.infrastructure.client.odsay.OdsayClient;
-import com.f12.moitz.infrastructure.client.odsay.SubwayCode;
 import com.f12.moitz.infrastructure.client.odsay.OdsaySubwayCode;
 import com.f12.moitz.infrastructure.client.odsay.dto.SubPathResponse;
 import com.f12.moitz.infrastructure.client.odsay.dto.SubwayRouteSearchResponse;
@@ -17,7 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -58,7 +57,7 @@ public class RouteFinderAdapter implements RouteFinder {
         final List<Path> resultingPaths = new ArrayList<>();
         // 환승이 존재할 경우 마지막 유효한 역 이름과 좌표로 대치하도록
         String lastValidStationName = null;
-        GeoJsonPoint lastValidPoint = null;
+        Point lastValidPoint = null;
 
         for (SubPathResponse subPath : subPaths) {
             if (subPath.startName() == null || subPath.endName() == null) {
@@ -78,11 +77,11 @@ public class RouteFinderAdapter implements RouteFinder {
             else {
                 final Place startPlace = new Place(
                         subPath.startName(),
-                        new GeoJsonPoint(subPath.startX(), subPath.startY())
+                        new Point(subPath.startX(), subPath.startY())
                 );
                 final Place endPlace = new Place(
                         subPath.endName(),
-                        new GeoJsonPoint((subPath.endX()), subPath.endY())
+                        new Point((subPath.endX()), subPath.endY())
                 );
                 resultingPaths.add(new Path(
                         startPlace,
@@ -93,7 +92,7 @@ public class RouteFinderAdapter implements RouteFinder {
                 ));
 
                 lastValidStationName = subPath.endName();
-                lastValidPoint = new GeoJsonPoint(subPath.endX(), subPath.endY());
+                lastValidPoint = new Point(subPath.endX(), subPath.endY());
             }
         }
 

@@ -8,6 +8,7 @@ import com.f12.moitz.domain.subway.Edge;
 import com.f12.moitz.domain.subway.SubwayEdges;
 import com.f12.moitz.domain.subway.SubwayLine;
 import com.f12.moitz.domain.subway.SubwayStation;
+import com.f12.moitz.domain.subway.SubwayStationEntity;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -20,6 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,12 +59,18 @@ public class SetupService {
                 .distinct()
                 .toList();
 
-        final List<SubwayStation> subwayStations = placeFinder.findPlacesByNames(stationNames)
+        final List<SubwayStationEntity> subwayStationEntities = placeFinder.findPlacesByNames(stationNames)
                 .stream()
-                .map(place -> new SubwayStation(place.getName(), place.getPoint()))
+                .map(place -> new SubwayStationEntity(
+                        place.getName(),
+                        new GeoJsonPoint(place.getPoint().getX(), place.getPoint().getY())))
                 .toList();
 
-        subwayStationService.saveAll(subwayStations);
+        subwayStationService.saveAll(subwayStationEntities);
+
+        List<SubwayStation> subwayStations = subwayStationEntities.stream()
+                .map(SubwayStationEntity::toDomain)
+                .toList();
 
         // 역과 엣지 조립
         final SubwayEdges subwayEdges = assembleSubwayStations(subwayStations, rawRoutes);

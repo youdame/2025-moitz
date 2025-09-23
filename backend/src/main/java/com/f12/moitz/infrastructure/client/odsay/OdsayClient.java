@@ -26,7 +26,7 @@ public class OdsayClient {
     @Value("${odsay.api.key}")
     private String odsayApiKey;
 
-    public SubwayRouteSearchResponse getRoute(final GeoJsonPoint startPoint, final GeoJsonPoint endPoint) {
+    public SubwayRouteSearchResponse getRoute(final Point startPoint, final Point endPoint) {
         final String url = String.format(
                 ODSAY_ROUTE_SEARCH_URL,
                 startPoint.getX(),

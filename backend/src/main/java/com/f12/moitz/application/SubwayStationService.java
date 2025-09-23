@@ -2,10 +2,17 @@ package com.f12.moitz.application;
 
 import com.f12.moitz.domain.repository.SubwayStationRepository;
 import com.f12.moitz.domain.subway.SubwayStation;
+import com.f12.moitz.domain.subway.SubwayStationEntity;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Point;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -14,8 +21,9 @@ import org.springframework.stereotype.Service;
 public class SubwayStationService {
 
     private final SubwayStationRepository subwayStationRepository;
+    private GeometryFactory geometryFactory;
 
-    public List<SubwayStation> findAll() {
+    public List<SubwayStationEntity> findAll() {
         return subwayStationRepository.findAll();
     }
 
@@ -34,7 +42,35 @@ public class SubwayStationService {
         return subwayStationRepository.count();
     }
 
-    public void saveAll(final List<SubwayStation> subwayStations) {
-        subwayStationRepository.saveAll(subwayStations);
+    public void saveAll(final List<SubwayStationEntity> subwayStationEntity) {
+        subwayStationRepository.saveAll(subwayStationEntity);
+    }
+
+    public List<SubwayStation> generateCandidatePlace(List<SubwayStation> startingStations) {
+        List<SubwayStationEntity> stationEntities = startingStations.stream()
+                .map(SubwayStationEntity::toFromSubwayStation)
+                .toList();
+
+        Coordinate[] coordinateArr = stationEntities.stream()
+                .map(place -> {
+                    List<Double> coordinates = place.getPoint().getCoordinates();
+                    return new Coordinate(coordinates.get(0), coordinates.get(1));
+                })
+                .toArray(Coordinate[]::new);
+
+        MultiPoint multiPoint = geometryFactory.createMultiPointFromCoords(coordinateArr);
+
+        Point centroid = multiPoint.getCentroid();
+
+        log.info("centroid : {}", centroid.getX() + " "  + centroid.getY());
+
+        org.springframework.data.geo.Point center =
+                new org.springframework.data.geo.Point(centroid.getX(), centroid.getY());
+
+        Distance distance = new Distance(5, Metrics.KILOMETERS);
+
+        return subwayStationRepository.findByPointNear(center, distance).stream()
+                .map(SubwayStationEntity::toDomain)
+                .toList();
     }
 }
