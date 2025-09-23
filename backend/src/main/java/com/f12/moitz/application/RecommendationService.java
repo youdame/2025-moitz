@@ -9,6 +9,8 @@ import com.f12.moitz.application.port.RouteFinder;
 import com.f12.moitz.application.port.dto.ReasonAndDescription;
 import com.f12.moitz.application.port.dto.StartEndPair;
 import com.f12.moitz.application.utils.RecommendationMapper;
+import com.f12.moitz.common.error.exception.GeneralErrorCode;
+import com.f12.moitz.common.error.exception.NotFoundException;
 import com.f12.moitz.domain.Place;
 import com.f12.moitz.domain.RecommendCondition;
 import com.f12.moitz.domain.Recommendation;
@@ -155,9 +157,9 @@ public class RecommendationService {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public RecommendationsResponse findResultById(final String id) {
+    public RecommendationsResponse getById(final String id) {
         final Result result = recommendResultRepository.findById(new ObjectId(id))
-                .orElseThrow(() -> new IllegalArgumentException("아이디에 해당하는 결과를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException(GeneralErrorCode.INPUT_INVALID_RESULT));
         return recommendationMapper.toResponse(result);
     }
 
