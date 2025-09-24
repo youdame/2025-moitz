@@ -18,10 +18,10 @@ function ProgressLoading({ isReadyToComplete }: ProgressLoadingProps) {
   });
 
   useEffect(() => {
-    if (isReadyToComplete && progress < 100) {
+    if (isReadyToComplete) {
       complete();
     }
-  }, [isReadyToComplete]);
+  }, [isReadyToComplete, complete]);
 
   return (
     <BaseLoading>
