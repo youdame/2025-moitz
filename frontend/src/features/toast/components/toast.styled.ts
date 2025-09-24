@@ -2,8 +2,6 @@ import { css, keyframes } from '@emotion/react';
 
 import { borderRadiusToken, colorToken, layout } from '@shared/styles/tokens';
 
-console.log(layout.minWidth);
-
 const slideDown = () => keyframes`
   0% {
     transform: translateY(-100%);
