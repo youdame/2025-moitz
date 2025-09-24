@@ -6,13 +6,15 @@ import IconError from '@icons/icon-error.svg';
 
 import * as fallBackPage from './fallBackPage.styled';
 
-function FallBackPage({
-  reset,
-  error,
-}: {
+interface FallBackPageProps {
   reset: () => void;
   error: Error | null;
-}) {
+}
+
+function FallBackPage({
+  reset = () => window.location.reload(),
+  error,
+}: FallBackPageProps) {
   return (
     <Layout>
       <div
