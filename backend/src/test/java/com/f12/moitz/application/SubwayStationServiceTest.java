@@ -30,16 +30,17 @@ class SubwayStationServiceTest {
         final String expectedName = "총신대입구역";
         final SubwayStation expectedStation = new SubwayStation(expectedName, new Point(125, 34));
 
-        Mockito.when(subwayStationRepository.findByName("이수")).thenReturn(Optional.of(expectedStation));
-        Mockito.when(subwayStationRepository.findByName("이수역")).thenReturn(Optional.of(expectedStation));
+        Mockito.when(subwayStationRepository.findByName("총신대입구역")).thenReturn(Optional.of(expectedStation));
 
         // When
-        String actualName1 = subwayStationService.getByName("이수").getName();
-        String actualName2 = subwayStationService.getByName("이수역").getName();
+        final Optional<SubwayStation> station1 = subwayStationService.findByName("이수");
+        final Optional<SubwayStation> station2 = subwayStationService.findByName("이수역");
 
         // Then
-        assertThat(actualName1).isEqualTo(expectedName);
-        assertThat(actualName2).isEqualTo(expectedName);
+        assertThat(station1).contains(expectedStation);
+        assertThat(station1.get().getName()).isEqualTo(expectedName);
+        assertThat(station2).contains(expectedStation);
+        assertThat(station2.get().getName()).isEqualTo(expectedName);
     }
 
 }
