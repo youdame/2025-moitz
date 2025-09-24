@@ -33,7 +33,7 @@ public class SubwayStationService {
     }
 
     public Optional<SubwayStation> findByName(final String name) {
-        if (name.contains("이수")) {
+        if ("이수역".equals(name)) {
             return subwayStationRepository.findByName("총신대입구역");
         }
         return subwayStationRepository.findByName(name);
