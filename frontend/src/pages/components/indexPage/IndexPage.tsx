@@ -15,7 +15,14 @@ function IndexPage() {
 
   if (isLoading) return <ProgressLoading />;
   if (isError)
-    return <FallBackPage reset={() => {}} error={new Error(errorMessage)} />;
+    return (
+      <FallBackPage
+        reset={() => {
+          window.location.reload();
+        }}
+        error={new Error(errorMessage)}
+      />
+    );
   return (
     <div
       css={[
