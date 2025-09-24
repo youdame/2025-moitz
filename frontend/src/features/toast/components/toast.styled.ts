@@ -1,6 +1,8 @@
 import { css, keyframes } from '@emotion/react';
 
-import { borderRadiusToken, colorToken } from '@shared/styles/tokens';
+import { borderRadiusToken, colorToken, layout } from '@shared/styles/tokens';
+
+console.log(layout.minWidth);
 
 const slideDown = () => keyframes`
   0% {
@@ -23,6 +25,7 @@ const slideDown = () => keyframes`
 
 export const container = () => css`
   width: max-content;
+  max-width: calc(${layout.minWidth} - 40px);
   position: fixed;
   top: 20px;
   left: 50%;
