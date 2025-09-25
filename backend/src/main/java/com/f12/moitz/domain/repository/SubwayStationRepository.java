@@ -1,6 +1,5 @@
 package com.f12.moitz.domain.repository;
 
-import com.f12.moitz.domain.subway.SubwayStation;
 import com.f12.moitz.domain.subway.SubwayStationEntity;
 import java.util.List;
 import java.util.Optional;
