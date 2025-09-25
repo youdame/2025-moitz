@@ -45,7 +45,7 @@ function FallBackPage({ reset, error, text }: FallBackPageProps) {
             <br />
             계속 문제가 발생한다면 모잇지에 알려주세요!
             <br />
-            {error?.message}
+            {error?.message || '알 수 없는 오류가 발생했습니다'}
           </span>
         </div>
         <BottomButton
