@@ -25,17 +25,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean<RateLimitFilter> rateLimitFilterRegistration() {
-        final FilterRegistrationBean<RateLimitFilter> registration = new FilterRegistrationBean<>();
-
-        registration.setFilter(rateLimitFilter);
-        registration.addUrlPatterns("/locations");
-        registration.setName("rateLimitFilter");
-
-        return registration;
-    }
-
-    @Bean
     public FilterRegistrationBean<EndPointLoggingFilter> endPointLoggingFilterFilterRegistration() {
         final FilterRegistrationBean<EndPointLoggingFilter> registration = new FilterRegistrationBean<>();
 
@@ -43,6 +32,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registration.addUrlPatterns("/locations/*");
         registration.addUrlPatterns("/recommendations/*");
         registration.setName("endPointLoggingFilter");
+        registration.setOrder(1);
+
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean<RateLimitFilter> rateLimitFilterRegistration() {
+        final FilterRegistrationBean<RateLimitFilter> registration = new FilterRegistrationBean<>();
+
+        registration.setFilter(rateLimitFilter);
+        registration.addUrlPatterns("/locations");
+        registration.setName("rateLimitFilter");
+        registration.setOrder(2);
 
         return registration;
     }
