@@ -51,7 +51,7 @@ public class RecommendationService {
             @Autowired final LocationRecommender locationRecommender,
             @Qualifier("subwayRouteFinderAdapter") final RouteFinder routeFinder,
             @Autowired final RecommendationMapper recommendationMapper,
-            @Autowired RecommendResultRepository recommendResultRepository
+            @Autowired final RecommendResultRepository recommendResultRepository
     ) {
         this.subwayStationService = subwayStationService;
         this.placeRecommender = placeRecommender;
@@ -71,8 +71,8 @@ public class RecommendationService {
         final List<SubwayStation> startingPlaces = getByNames(request.startingPlaceNames());
         final List<SubwayStation> candidatePlaces = subwayStationService.generateCandidatePlace(startingPlaces);
 
-        final List<String> startingPlaceNames = findPlaceNames(startingPlaces);
-        final List<String> candidatePlaceNames = findPlaceNames(candidatePlaces);
+        final List<String> startingPlaceNames = getPlaceNames(startingPlaces);
+        final List<String> candidatePlaceNames = getPlaceNames(candidatePlaces);
 
         final RecommendedLocationsResponse recommendedLocationsResponse = locationRecommender.recommendLocations(
                 startingPlaceNames,
@@ -125,8 +125,8 @@ public class RecommendationService {
         ).toHexString().toUpperCase();
     }
 
-    private List<String> findPlaceNames(List<SubwayStation> startingPlaces) {
-        return startingPlaces.stream()
+    private List<String> getPlaceNames(final List<SubwayStation> stations) {
+        return stations.stream()
                 .map(Place::getName)
                 .toList();
     }
