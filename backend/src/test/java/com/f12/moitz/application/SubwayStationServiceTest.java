@@ -2,10 +2,9 @@ package com.f12.moitz.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.f12.moitz.domain.Point;
 import com.f12.moitz.domain.repository.SubwayStationRepository;
 import com.f12.moitz.domain.subway.SubwayStation;
-import com.f12.moitz.domain.subway.SubwayStationEntity;
+import com.f12.moitz.infrastructure.persistence.SubwayStationEntity;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,9 +38,9 @@ class SubwayStationServiceTest {
         final Optional<SubwayStation> station2 = subwayStationService.findByName("총신대입구역");
 
         // Then
-        assertThat(station1).contains(expectedStation.toDomain());
+        assertThat(station1).contains(expectedStation.toSubwayStation());
         assertThat(station1.get().getName()).isEqualTo(expectedName);
-        assertThat(station2).contains(expectedStation.toDomain());
+        assertThat(station2).contains(expectedStation.toSubwayStation());
         assertThat(station2.get().getName()).isEqualTo(expectedName);
     }
 

@@ -1,6 +1,7 @@
-package com.f12.moitz.domain.subway;
+package com.f12.moitz.infrastructure.persistence;
 
 import com.f12.moitz.domain.Point;
+import com.f12.moitz.domain.subway.SubwayStation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
@@ -19,11 +20,11 @@ public class SubwayStationEntity {
     private final GeoJsonPoint point;
 
 
-    public SubwayStation toDomain() {
+    public SubwayStation toSubwayStation() {
         return new SubwayStation(name, new Point(point.getX(), point.getY()));
     }
 
-    public static SubwayStationEntity toFromSubwayStation(SubwayStation subwayStation) {
+    public static SubwayStationEntity fromSubwayStation(SubwayStation subwayStation) {
         return new SubwayStationEntity(
                 subwayStation.getName(),
                 new GeoJsonPoint(

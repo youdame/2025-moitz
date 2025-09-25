@@ -3,12 +3,11 @@ package com.f12.moitz.application;
 import com.f12.moitz.domain.Place;
 import com.f12.moitz.domain.repository.SubwayStationRepository;
 import com.f12.moitz.domain.subway.SubwayStation;
-import com.f12.moitz.domain.subway.SubwayStationEntity;
+import com.f12.moitz.infrastructure.persistence.SubwayStationEntity;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPoint;
@@ -28,13 +27,13 @@ public class SubwayStationService {
 
     public List<SubwayStation> getAll() {
         return subwayStationRepository.findAll().stream()
-                .map(SubwayStationEntity::toDomain)
+                .map(SubwayStationEntity::toSubwayStation)
                 .toList();
     }
 
     public List<String> findAllStationNames() {
         return subwayStationRepository.findAll().stream()
-                .map(SubwayStationEntity::toDomain)
+                .map(SubwayStationEntity::toSubwayStation)
                 .map(Place::getName)
                 .toList();
     }
@@ -42,7 +41,7 @@ public class SubwayStationService {
     public SubwayStation getByName(final String name) {
         return subwayStationRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchElementException("이름이 일치하는 지하철역이 존재하지 않습니다. 역 이름: " + name))
-                .toDomain();
+                .toSubwayStation();
     }
 
     public Optional<SubwayStation> findByName(final String name) {
@@ -55,7 +54,7 @@ public class SubwayStationService {
 
     private Optional<SubwayStation> getSubwayStation(final String stationName) {
         return subwayStationRepository.findByName(stationName)
-                .map(SubwayStationEntity::toDomain);
+                .map(SubwayStationEntity::toSubwayStation);
     }
 
     public long getCount() {
@@ -64,14 +63,14 @@ public class SubwayStationService {
 
     public void saveAll(final List<SubwayStation> subwayStations) {
         final List<SubwayStationEntity> subwayStationEntities = subwayStations.stream()
-                .map(SubwayStationEntity::toFromSubwayStation)
+                .map(SubwayStationEntity::fromSubwayStation)
                 .toList();
         subwayStationRepository.saveAll(subwayStationEntities);
     }
 
     public List<SubwayStation> generateCandidatePlace(final List<SubwayStation> startingStations) {
         final List<SubwayStationEntity> stationEntities = startingStations.stream()
-                .map(SubwayStationEntity::toFromSubwayStation)
+                .map(SubwayStationEntity::fromSubwayStation)
                 .toList();
 
         final Coordinate[] coordinateArr = getCoordinates(stationEntities);
@@ -80,7 +79,7 @@ public class SubwayStationService {
         final Distance distance = new Distance(DISTANCE_VALUE, Metrics.KILOMETERS);
 
         return subwayStationRepository.findByPointNear(center, distance).stream()
-                .map(SubwayStationEntity::toDomain)
+                .map(SubwayStationEntity::toSubwayStation)
                 .toList();
     }
 

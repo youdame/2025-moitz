@@ -1,6 +1,6 @@
 package com.f12.moitz.domain.repository;
 
-import com.f12.moitz.domain.subway.SubwayStationEntity;
+import com.f12.moitz.infrastructure.persistence.SubwayStationEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.geo.Distance;
@@ -12,4 +12,5 @@ public interface SubwayStationRepository extends MongoRepository<SubwayStationEn
     Optional<SubwayStationEntity> findByName(String name);
 
     List<SubwayStationEntity> findByPointNear(Point center, Distance distance);
+
 }
