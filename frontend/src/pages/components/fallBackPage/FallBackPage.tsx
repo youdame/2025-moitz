@@ -9,11 +9,13 @@ import * as fallBackPage from './fallBackPage.styled';
 interface FallBackPageProps {
   reset: () => void;
   error: Error | null;
+  text?: string;
 }
 
 function FallBackPage({
   reset = () => window.location.reload(),
   error,
+  text,
 }: FallBackPageProps) {
   return (
     <Layout>
@@ -52,7 +54,7 @@ function FallBackPage({
         </div>
         <BottomButton
           type="button"
-          text="다시 시도하기"
+          text={text || '홈으로 가기'}
           active
           onClick={reset}
         />

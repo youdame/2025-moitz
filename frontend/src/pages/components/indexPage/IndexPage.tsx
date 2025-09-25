@@ -21,6 +21,7 @@ function IndexPage() {
           window.location.reload();
         }}
         error={new Error(errorMessage)}
+        text="홈으로 돌아가기"
       />
     );
   return (

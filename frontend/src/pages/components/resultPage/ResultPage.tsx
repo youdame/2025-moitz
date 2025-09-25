@@ -54,6 +54,7 @@ function ResultPage() {
       <FallBackPage
         reset={() => window.location.reload()}
         error={new Error('추천 결과가 없습니다.')}
+        text="홈으로 돌아가기"
       />
     );
 
