@@ -20,7 +20,7 @@ public class EndPointLoggingFilter implements Filter {
 
         final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 
-        final String clientIp = httpServletRequest.getHeader("X-Forwarded-For");
+        final String clientIp = httpServletRequest.getRemoteAddr();
         final String userAgent = httpServletRequest.getHeader("User-Agent");
         final String uri = httpServletRequest.getRequestURI();
         final String method = httpServletRequest.getMethod();
@@ -29,4 +29,5 @@ public class EndPointLoggingFilter implements Filter {
         filterChain.doFilter(httpServletRequest, servletResponse);
 
     }
+
 }
