@@ -35,29 +35,13 @@ export const validateStationName = (name: string): ValidationError => {
       message: '출발지를 입력해주세요',
     };
   }
-
-  const matched = STATION_LIST.filter((station) =>
-    station.includes(name as (typeof STATION_LIST)[number]),
-  );
-
-  if (matched.length === 0) {
+  if (!STATION_LIST.includes(name as (typeof STATION_LIST)[number])) {
     return {
       isValid: false,
       message: '서울 내의 올바른 지하철 역이름을 입력해주세요',
     };
   }
-
-  if (matched.length === 1) {
-    return {
-      isValid: true,
-      message: '',
-    };
-  }
-
-  return {
-    isValid: true,
-    message: '여러 개의 역이 검색되었습니다. 더 정확히 입력해주세요',
-  };
+  return { isValid: true, message: '' };
 };
 
 export const validateDuplicateDeparture = (

@@ -12,8 +12,6 @@ import { LocationRequirement } from '@entities/location/types/LocationRequiremen
 
 import { ValidationError } from '@shared/types/validationError';
 
-import { STATION_LIST } from '../config/stationList';
-
 type UseFormInfoReturn = {
   departureList: string[];
   conditionID: LocationRequirement;
@@ -34,20 +32,14 @@ export function useFormInfo(): UseFormInfoReturn {
 
   const addDepartureWithValidation = (departure: string): ValidationError => {
     const stationNameValidation = validateStationName(departure);
-
     if (!stationNameValidation.isValid) {
       return stationNameValidation;
     }
 
-    const matchedDeparture = STATION_LIST.filter((station) =>
-      station.includes(departure as (typeof STATION_LIST)[number]),
-    )[0];
-
     const duplicateValidation = validateDuplicateDeparture(
       departureList,
-      matchedDeparture,
+      departure,
     );
-
     if (!duplicateValidation.isValid) {
       return duplicateValidation;
     }
@@ -55,11 +47,11 @@ export function useFormInfo(): UseFormInfoReturn {
     const lengthValidation = validateDepartureListMaxLength(
       departureList.length,
     );
-
     if (!lengthValidation.isValid) {
       return lengthValidation;
     }
-    setDepartureList((prev) => [...prev, matchedDeparture]);
+
+    setDepartureList((prev) => [...prev, departure]);
     return { isValid: true, message: '' };
   };
 
