@@ -1,4 +1,3 @@
-import { f } from '@mswjs/interceptors/lib/node/Interceptor-bc5a9d8e';
 import React, { useState } from 'react';
 
 import InputFormSection from '@features/meeting/components/meetingFormSection/MeetingFormSection';
