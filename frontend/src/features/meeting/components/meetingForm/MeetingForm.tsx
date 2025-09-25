@@ -29,7 +29,7 @@ function MeetingForm() {
   } = useFormInfo();
   const { isVisible, message, showToast } = useToast();
 
-  const { getRecommendationId } = useLocationsContext();
+  const { getRecommendationFull } = useLocationsContext();
 
   const isValid = React.useMemo(
     () => validateFormSubmit().isValid,
@@ -60,7 +60,7 @@ function MeetingForm() {
     }
 
     try {
-      const id = await getRecommendationId({
+      const { id } = await getRecommendationFull({
         startingPlaceNames: departureList,
         requirement: conditionID,
       });
