@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -63,16 +64,20 @@ public class RecommendationService {
 
         stopWatch.start("지역 추천");
         final String requirement = RecommendCondition.fromTitle(request.requirement()).getKeyword();
+
         final List<SubwayStation> startingPlaces = subwayStationService.findByNames(request.startingPlaceNames());
+        List<String> startingPlaceNames = getStationsName(startingPlaces);
 
-        final List<SubwayStation> candidatePlace = subwayStationService.generateCandidatePlace(startingPlaces);
-
-        log.info("CandidatePlace : {}", candidatePlace);
+        final List<SubwayStation> candidatePlaces = subwayStationService.generateCandidatePlace(startingPlaces);
+        List<String> candidatePlacesNames = getStationsName(candidatePlaces);
+        log.info(candidatePlacesNames.toString());
 
         final RecommendedLocationsResponse recommendedLocationsResponse = locationRecommender.recommendLocations(
-                request.startingPlaceNames(),
+                startingPlaceNames,
+                candidatePlacesNames,
                 requirement
         );
+
         log.info("[AI 추천 지역] : {}", recommendedLocationsResponse.toString());
         final Map<Place, ReasonAndDescription> generatedPlacesWithReason = recommendedLocationsResponse.recommendations()
                 .stream()
@@ -120,9 +125,15 @@ public class RecommendationService {
         ).toHexString().toUpperCase();
     }
 
+    @NotNull
+    private List<String> getStationsName(List<SubwayStation> startingSubwayStations) {
+        return startingSubwayStations.stream()
+                .map(SubwayStation::getName)
+                .toList();
+    }
+
     public Map<Place, Routes> findRoutesForAllAsync(
-            final List<? extends Place> startingPlaces,
-            final List<Place> generatedPlaces
+            List<SubwayStation> startingPlaces, final List<Place> generatedPlaces
     ) {
         final List<StartEndPair> allPairs = generatedPlaces.stream()
                 .flatMap(endPlace -> startingPlaces.stream()

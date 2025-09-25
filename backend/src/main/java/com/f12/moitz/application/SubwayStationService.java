@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPoint;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SubwayStationService {
 
-    private final static int DISTANCE_VALUE = 5;
+    private final static int DISTANCE_VALUE = 10;
 
     private final SubwayStationRepository subwayStationRepository;
     private final GeometryFactory geometryFactory;
@@ -31,8 +30,9 @@ public class SubwayStationService {
     }
 
     public SubwayStation findByName(final String name) {
-        return subwayStationRepository.findByName(name)
+        SubwayStationEntity subwayStationEntity = subwayStationRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchElementException("이름이 일치하는 지하철역이 존재하지 않습니다."));
+        return subwayStationEntity.toDomain();
     }
 
     public List<SubwayStation> findByNames(final List<String> names) {
@@ -50,6 +50,7 @@ public class SubwayStationService {
     }
 
     public List<SubwayStation> generateCandidatePlace(List<SubwayStation> startingStations) {
+
         List<SubwayStationEntity> stationEntities = startingStations.stream()
                 .map(SubwayStationEntity::toFromSubwayStation)
                 .toList();
@@ -57,8 +58,8 @@ public class SubwayStationService {
         Coordinate[] coordinateArr = getCoordinates(stationEntities);
 
         org.springframework.data.geo.Point center = getCenterPoint(coordinateArr);
-
-        Distance distance = new Distance(DISTANCE_VALUE, Metrics.KILOMETERS);
+        Distance distance;
+            distance = new Distance(DISTANCE_VALUE, Metrics.KILOMETERS);
 
         return subwayStationRepository.findByPointNear(center, distance).stream()
                 .map(SubwayStationEntity::toDomain)
@@ -75,6 +76,7 @@ public class SubwayStationService {
     }
 
     private org.springframework.data.geo.Point getCenterPoint(Coordinate[] coordinateArr) {
+
         MultiPoint multiPoint = geometryFactory.createMultiPointFromCoords(coordinateArr);
 
         Point centroid = multiPoint.getCentroid();

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface SubwayStationRepository extends MongoRepository<SubwayStationEntity, String> {
 
-    Optional<SubwayStation> findByName(String name);
+    Optional<SubwayStationEntity> findByName(String name);
 
     List<SubwayStationEntity> findByPointNear(Point center, Distance distance);
 }

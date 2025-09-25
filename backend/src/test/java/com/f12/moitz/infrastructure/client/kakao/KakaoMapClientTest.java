@@ -63,7 +63,7 @@ class KakaoMapClientTest {
         );
 
         // When
-        GeoJsonPoint actualPoint = kakaoMapClient.searchPointBy("강남역");
+        Point actualPoint = kakaoMapClient.searchPointBy("강남역");
 
         // Then
         assertThat(actualPoint.getX()).isEqualTo(127.027618);

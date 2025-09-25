@@ -25,22 +25,25 @@ public class LocationRecommenderAdapter implements LocationRecommender {
             maxAttempts = 2,
             recover = "recoverRecommendedLocations"
     )
+
     @Override
     public RecommendedLocationsResponse recommendLocations(
-            final List<String> startPlaceNames,
-            final String condition
-    ) {
+            List<String> startingPlaces,
+            List<String> candidatePlaces,
+            String requirement)
+    {
         final RecommendedLocationsResponse generatedResponse = geminiClient.generateResponse(
-                startPlaceNames,
-                condition
+                startingPlaces,
+                candidatePlaces,
+                requirement
         );
         final RecommendedLocationsResponse deduplicatedLocations = deduplicateLocation(generatedResponse);
+
         return excludeStartPlaces(
                 deduplicatedLocations,
-                startPlaceNames
+                startingPlaces
         );
     }
-
 
     @Recover
     public RecommendedLocationsResponse recoverRecommendedLocations(
@@ -78,5 +81,4 @@ public class LocationRecommenderAdapter implements LocationRecommender {
                 .toList()
         );
     }
-
 }

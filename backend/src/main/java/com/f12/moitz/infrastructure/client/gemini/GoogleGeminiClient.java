@@ -1,6 +1,6 @@
 package com.f12.moitz.infrastructure.client.gemini;
 
-import static com.f12.moitz.infrastructure.PromptGenerator.ADDITIONAL_PROMPT;
+import static com.f12.moitz.infrastructure.PromptGenerator.ADDITIONAL_WITH_CANDIDATE_PROMPT;
 import static com.f12.moitz.infrastructure.PromptGenerator.RECOMMENDATION_COUNT;
 
 import com.f12.moitz.application.dto.PlaceRecommendResponse;
@@ -8,7 +8,6 @@ import com.f12.moitz.application.dto.RecommendedLocationsResponse;
 import com.f12.moitz.common.error.exception.ExternalApiErrorCode;
 import com.f12.moitz.common.error.exception.ExternalApiException;
 import com.f12.moitz.common.error.exception.RetryableApiException;
-import com.f12.moitz.domain.Place;
 import com.f12.moitz.infrastructure.PromptGenerator;
 import com.f12.moitz.infrastructure.client.gemini.dto.RecommendedPlaceResponses;
 import com.f12.moitz.infrastructure.client.gemini.utils.JsonParser;
@@ -40,24 +39,27 @@ public class GoogleGeminiClient {
     private final Client geminiClient;
     private final ObjectMapper objectMapper;
 
-    public RecommendedLocationsResponse generateResponse(
-            final List<String> stationNames,
-            final String requirement
-    ) {
+    public RecommendedLocationsResponse generateResponse(List<String> startingPlaces, List<String> candidatePlace, String requirement) {
         return readValue(
-                generateContent(stationNames, requirement, PromptGenerator.getSchema()).text(),
+                generateContent(
+                        startingPlaces,
+                        candidatePlace,
+                        requirement,
+                        PromptGenerator.getSchema()
+                ).text(),
                 RecommendedLocationsResponse.class
         );
     }
 
-    private GenerateContentResponse generateContent(
-            final List<String> stationNames,
-            final String requirement,
-            final Map<String, Object> inputData
-    ) {
-
-        final String stations = String.join(", ", stationNames);
-        final String prompt = String.format(ADDITIONAL_PROMPT, RECOMMENDATION_COUNT, stations, requirement, RECOMMENDATION_COUNT);
+    private GenerateContentResponse generateContent(List<String> startingStations, List<String> candidateStations, String requirement, Map<String, Object> inputData) {
+        final String prompt = String.format(
+                ADDITIONAL_WITH_CANDIDATE_PROMPT,
+                RECOMMENDATION_COUNT,
+                startingStations,
+                candidateStations,
+                requirement,
+                RECOMMENDATION_COUNT
+        );
 
         final GenerateContentConfig config = GenerateContentConfig.builder()
                 .temperature(0.4F)
