@@ -22,13 +22,12 @@ public class RecommendationController implements SwaggerRecommendationController
 
     @PostMapping
     public ResponseEntity<RecommendationCreateResponse> recommendLocations(@RequestBody RecommendationRequest request) {
-        return ResponseEntity.status(201)
-                .body(new RecommendationCreateResponse(recommendationService.recommendLocation(request)));
+        return ResponseEntity.status(201).body(new RecommendationCreateResponse(recommendationService.recommendLocation(request)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RecommendationsResponse> getRecommendationResult(@PathVariable("id") String id) {
-        RecommendationsResponse response = recommendationService.findResultById(id);
+    public ResponseEntity<RecommendationsResponse> getRecommendationResult(@PathVariable("id") String id){
+        RecommendationsResponse response = recommendationService.getById(id);
         return ResponseEntity.ok().body(response);
     }
 }
