@@ -15,9 +15,11 @@ import org.springframework.stereotype.Component;
 public class EndPointLoggingFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-
+    public void doFilter(
+            final ServletRequest servletRequest,
+            final ServletResponse servletResponse,
+            final FilterChain filterChain
+    ) throws IOException, ServletException {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 
         final String clientIp = httpServletRequest.getRemoteAddr();
@@ -27,7 +29,6 @@ public class EndPointLoggingFilter implements Filter {
 
         log.info("Request URI: {} | Method: {} | ClientIp: {} | User-Agent: {}", uri, method, clientIp, userAgent);
         filterChain.doFilter(httpServletRequest, servletResponse);
-
     }
 
 }
