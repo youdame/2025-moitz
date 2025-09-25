@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPoint;
@@ -18,12 +17,11 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubwayStationService {
 
-    private final static int DISTANCE_VALUE = 10;
+    private static final int DISTANCE_VALUE = 10;
 
     private final SubwayStationRepository subwayStationRepository;
     private final GeometryFactory geometryFactory;
