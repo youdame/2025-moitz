@@ -1,8 +1,8 @@
-import { getMeetingStorage } from '@entities/location/model/meetingStorage';
 import {
   RecommendedLocation,
   StartingPlace,
 } from '@entities/location/types/Location';
+import { LocationRequirement } from '@entities/location/types/LocationRequirement';
 
 import MeetingWrapper from '@shared/components/meetingWrapper/MeetingWrapper';
 
@@ -11,17 +11,16 @@ import SpotItemList from '../spotItemList/SpotItemList';
 interface BottomSheetListProps {
   startingPlaces: StartingPlace[];
   recommendedLocations: RecommendedLocation[];
+  conditionID: LocationRequirement;
   onSpotClick: (spot: RecommendedLocation) => void;
 }
 
 function BottomSheetList({
   startingPlaces,
   recommendedLocations,
+  conditionID,
   onSpotClick,
 }: BottomSheetListProps) {
-  const { conditionID: storedConditionID } = getMeetingStorage();
-  const conditionID = storedConditionID ?? 'NOT_SELECTED';
-
   return (
     <>
       <MeetingWrapper
