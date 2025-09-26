@@ -1,7 +1,4 @@
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? process.env.PROD_API_BASE_URL
-    : process.env.DEV_API_BASE_URL;
+import { config } from '@config/env';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -28,7 +25,7 @@ export const createApiRequest = async <T>({
   body,
   headers: customHeaders = {},
 }: RequestConfig): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
+  const url = `${config.api.baseUrl}${endpoint}`;
 
   const headers = {
     'Content-Type': 'application/json',
