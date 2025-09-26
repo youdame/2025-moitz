@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +57,25 @@ export default function common(envVars = {}) {
         template: 'index.html',
         templateParameters: envVars,
         favicon: path.resolve(__dirname, './assets/icon/logo-icon.svg'),
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from:
+              process.env.NODE_ENV === 'production'
+                ? 'public/robots-prod.txt'
+                : 'public/robots-dev.txt',
+            to: 'robots.txt',
+          },
+          ...(process.env.NODE_ENV === 'production'
+            ? [
+                {
+                  from: 'public/sitemap.xml',
+                  to: 'sitemap.xml',
+                },
+              ]
+            : []),
+        ],
       }),
     ],
   };
