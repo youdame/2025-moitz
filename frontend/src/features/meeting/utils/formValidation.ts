@@ -47,6 +47,13 @@ export const validateStationName = (name: string): ValidationError => {
     };
   }
 
+  if (partialMatch.length > 1) {
+    return {
+      isValid: false,
+      message: '여러 출발지가 검색되었어요. 하나만 선택해주세요.',
+    };
+  }
+
   return { isValid: true, message: '' };
 };
 
