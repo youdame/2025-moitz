@@ -1,7 +1,6 @@
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? process.env.PROD_API_BASE_URL
-    : process.env.DEV_API_BASE_URL;
+import { getApiBaseUrl } from '@shared/config/env';
+
+const BASE_URL = getApiBaseUrl();
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 

@@ -1,15 +1,14 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
+import { getApiBaseUrl } from '@shared/config/env';
+
 import { LocationsRequestBodyMock } from '@mocks/LocationsRequestBodyMock';
 import { server } from '@mocks/server';
 
 import useLocations from './useLocations';
 
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? process.env.PROD_API_BASE_URL
-    : process.env.DEV_API_BASE_URL;
+const BASE_URL = getApiBaseUrl();
 
 describe('useLocations', () => {
   describe('getRecommendationId', () => {
