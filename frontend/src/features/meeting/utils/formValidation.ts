@@ -36,11 +36,11 @@ export const validateStationName = (name: string): ValidationError => {
     return { isValid: true, message: '' };
   }
 
-  const matched = STATION_LIST.filter((station) =>
+  const partialMatch = STATION_LIST.filter((station) =>
     station.includes(stationName),
   );
 
-  if (matched.length === 0) {
+  if (partialMatch.length === 0) {
     return {
       isValid: false,
       message: '서울 내의 올바른 지하철 역이름을 입력해주세요',
