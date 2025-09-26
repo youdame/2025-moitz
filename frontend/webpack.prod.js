@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 
 import common from './webpack.common.js';
@@ -50,7 +50,7 @@ export default merge(common(envVars), {
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
   optimization: {
     minimize: true,
