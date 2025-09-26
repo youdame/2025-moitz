@@ -5,6 +5,7 @@ import FallBackPage from '@pages/components/fallBackPage/FallBackPage';
 import useSelectedRecommendedLocation from '@pages/hooks/useSelectedLocation';
 
 import BaseLoading from '@features/loading/components/baseLoading/BaseLoading';
+import Header from '@features/map/components/header/Header';
 import Map from '@features/map/components/map/Map';
 import BottomSheet from '@features/recommendation/components/bottomSheet/BottomSheet';
 
@@ -65,25 +66,31 @@ function ResultPage() {
   const { startingPlaces, recommendedLocations } = location;
 
   return (
-    <div
-      css={[
-        flex({ direction: 'column', justify: 'flex-end' }),
-        resultPage.base(),
-      ]}
-    >
-      <Map
-        startingLocations={startingPlaces}
-        recommendedLocations={recommendedLocations}
+    <div css={resultPage.container()}>
+      <Header
         selectedLocation={selectedLocation}
-        changeSelectedLocation={changeSelectedLocation}
+        onLocationChange={changeSelectedLocation}
       />
-      <BottomSheet
-        startingLocations={location.startingPlaces}
-        recommendedLocations={location.recommendedLocations}
-        conditionID={location.requirement}
-        selectedLocation={selectedLocation}
-        handleSpotClick={handleSpotClick}
-      />
+      <div
+        css={[
+          flex({ direction: 'column', justify: 'flex-end' }),
+          resultPage.base(),
+        ]}
+      >
+        <Map
+          startingLocations={startingPlaces}
+          recommendedLocations={recommendedLocations}
+          selectedLocation={selectedLocation}
+          changeSelectedLocation={changeSelectedLocation}
+        />
+        <BottomSheet
+          startingLocations={location.startingPlaces}
+          recommendedLocations={location.recommendedLocations}
+          conditionID={location.requirement}
+          selectedLocation={selectedLocation}
+          handleSpotClick={handleSpotClick}
+        />
+      </div>
     </div>
   );
 }
