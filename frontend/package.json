@@ -39,6 +39,7 @@
     "@types/react-dom": "^19.1.6",
     "@types/webpack": "^5.28.5",
     "chromatic": "^13.1.2",
+    "copy-webpack-plugin": "^13.0.1",
     "css-loader": "^7.1.2",
     "dotenv": "^17.2.1",
     "eslint": "^9.30.1",
