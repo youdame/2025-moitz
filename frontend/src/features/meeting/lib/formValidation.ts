@@ -1,6 +1,6 @@
 import { ValidationError } from '@shared/types/validationError';
 
-import { STATION_LIST } from '../constant/stationList';
+import { STATION_LIST } from '../constants/stationList';
 
 const validateDepartureListMinLength = (
   length: number,
