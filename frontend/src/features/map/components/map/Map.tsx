@@ -1,25 +1,19 @@
-import { Link } from 'react-router';
+import { useMemo } from 'react';
+
+import FallBackPage from '@pages/fallBackPage/FallBackPage';
 
 import { useCustomOverlays } from '@features/map/hooks/useCustomOverlays';
+import { useNaverMapLoader } from '@features/map/hooks/useNaverMapLoader';
 import { SelectedLocation } from '@features/recommendation/types/SelectedLocation';
-import Toast from '@features/toast/components/Toast';
-import { useToast } from '@features/toast/hooks/useToast';
 
 import {
   RecommendedLocation,
   StartingPlace,
 } from '@entities/location/types/Location';
 
-import MapButton from '@shared/components/mapButton/MapButton';
-import MapPoint from '@shared/components/mapPoint/MapPoint';
-import { flex } from '@shared/styles/default.styled';
-
-import IconBack from '@icons/icon-back.svg';
-import IconShare from '@icons/icon-share.svg';
+import Skeleton from '@shared/components/skeleton/Skeleton';
 
 import * as map from './map.styled';
-
-const DEFAULT_CURRENT_RECOMMEND_LOCATION = '전체 추천 지점';
 
 interface MapProps {
   startingLocations: StartingPlace[];
@@ -34,56 +28,49 @@ function Map({
   selectedLocation,
   changeSelectedLocation,
 }: MapProps) {
-  const { isVisible, message, showToast } = useToast();
+  // 네이버 지도 API 로딩 상태 관리
+  const { isScriptLoaded, isLoading, errorMessage } = useNaverMapLoader();
 
-  const mapRef = useCustomOverlays({
-    startingLocations,
-    recommendedLocations,
-    selectedLocation,
-    changeSelectedLocation,
-  });
-
-  const handleBackButtonClick = () => {
-    changeSelectedLocation(null);
-  };
-
-  const handleShareButtonClick = () => {
-    navigator.clipboard.writeText(window.location.href);
-    showToast('링크가 복사되었습니다.');
-  };
-
-  return (
-    <div css={map.container()}>
-      <div ref={mapRef} css={map.base()} />
-      <div css={[flex({ justify: 'space-between' }), map.top_overlay()]}>
-        {!selectedLocation && (
-          <Link to="/">
-            <MapButton src={IconBack} alt="back" />
-          </Link>
-        )}
-        {selectedLocation && (
-          <MapButton
-            src={IconBack}
-            alt="back"
-            onClick={handleBackButtonClick}
-          />
-        )}
-        <MapPoint
-          text={
-            selectedLocation
-              ? selectedLocation.name
-              : DEFAULT_CURRENT_RECOMMEND_LOCATION
-          }
-        />
-        <MapButton
-          src={IconShare}
-          alt="share"
-          onClick={handleShareButtonClick}
-        />
-      </div>
-      <Toast message={message} isVisible={isVisible} />
-    </div>
+  const emptyProps = useMemo(
+    () => ({
+      startingLocations: [],
+      recommendedLocations: [],
+      selectedLocation: null,
+      changeSelectedLocation: () => {},
+    }),
+    [],
   );
+
+  // 스크립트가 로드된 후에만 지도 훅 사용
+  const mapRef = useCustomOverlays(
+    isScriptLoaded
+      ? {
+          startingLocations,
+          recommendedLocations,
+          selectedLocation,
+          changeSelectedLocation,
+        }
+      : emptyProps,
+  );
+
+  // 로딩 중일 때
+  if (isLoading) {
+    return <Skeleton />;
+  }
+
+  // 에러가 발생했을 때
+  if (errorMessage) {
+    return (
+      <FallBackPage
+        reset={() => window.location.reload()}
+        error={new Error(`지도 로딩 실패: ${errorMessage}`)}
+        text="페이지 새로고침"
+      />
+    );
+  }
+
+  // 스크립트가 로드되었을 때만 지도 렌더링
+  return <div ref={mapRef} css={map.container()} />;
 }
 
 export default Map;

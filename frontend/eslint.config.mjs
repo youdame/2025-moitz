@@ -61,7 +61,6 @@ export default [
 
       // emotion css prop를 쓰기 위한 규칙
       'react/no-unknown-property': ['error', { ignore: ['css'] }],
-      indent: ['error', 2],
       'import/order': [
         'error',
         {
@@ -132,11 +131,17 @@ export default [
               group: 'internal',
               position: 'before',
             },
-            // 8. storybook
+            // 8. config
+            {
+              pattern: '@config/**',
+              group: 'internal',
+              position: 'before',
+            },
+            // 9. storybook
             {
               pattern: '@sb/**',
               group: 'internal',
-              position: 'before'
+              position: 'before',
             },
           ],
           pathGroupsExcludedImportTypes: ['react'],
